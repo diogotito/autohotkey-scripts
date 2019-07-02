@@ -2,35 +2,45 @@
 
 #SingleInstance, Force
 #MaxThreadsPerHotkey, 1 ; no re-entrant hotkey handling
-; SetKeyDelay, 200, 50 ; in milliseconds
+; SetKeyDelay, 100, 50 ; in milliseconds
 #InstallKeybdHook
 
 
 ; Script state
 
 focused_qa := false
-; false = Action Centre closed, 1 = 1st quick action focused, 2 = ...
+; 0/false = Action Centre closed, 1 = 1st quick action focused, 2 = ...
 
 
 ; Hotkeys
 
 #NumpadMult::
 #+NumpadMult::
-#F9::QuickAction(1) ; Easily change laptop brighness when used as a 2nd screen
+#F9::
+    QuickAction(1) ; Easily change laptop brighness when used as a 2nd screen
+    return
 
 #NumpadDiv::
-#F10::QuickAction(2)
+#F10::
+    QuickAction(2)
+    return
 
-#F11::QuickAction(3)
+#F11::
+    QuickAction(3)
+    return
 
-#F12::QuickAction(4)
+#F12::
+    QuickAction(4)
+    return
 
 
 ; Only enable the following hotkeys while the Action Centre is opened
 #If focused_qa 
 
 ; Close the Action Centre as soon as the Win key is released
-~LWin UP::QuickAction(false)
+~LWin UP::
+    QuickAction(false)
+    return
 
 ; The Brightness quick action cycles through 5 different values from 0 to 100%.
 ; To lower the brightness, we can press the Brightness button 4 times.
@@ -38,6 +48,7 @@ focused_qa := false
 #+F9::
     Loop, 4
         QuickAction(1)
+    return
 
 
 QuickAction(new_qa) {
@@ -50,9 +61,8 @@ QuickAction(new_qa) {
     ; Open or close Action Centre
     if (focused_qa = false) {
         Send #a
-        Send +{Tab}
         Send {Tab}
-        Send +{Tab}
+        Send {Home}
         focused_qa := 1
     } else if (new_qa = false) {
         Send {Esc}
