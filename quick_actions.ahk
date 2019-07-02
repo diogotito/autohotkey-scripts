@@ -16,38 +16,28 @@ focused_qa := false
 
 #NumpadMult::
 #+NumpadMult::
-#F9::
-    QuickAction(1) ; Easily change laptop brighness when used as a 2nd screen
-    return
+#F9::QuickAction(1) ; Easily change laptop brighness when used as a 2nd screen
 
 #NumpadDiv::
-#F10::
-    QuickAction(2)
-    return
+#F10::QuickAction(2)
 
-#F11::
-    QuickAction(3)
-    return
+#F11::QuickAction(3)
 
-#F12::
-    QuickAction(4)
-    return
+#F12::QuickAction(4)
 
 
 ; Only enable the following hotkeys while the Action Centre is opened
-#If focused_qa 
+#If focused_qa
 
 ; Close the Action Centre as soon as the Win key is released
-~LWin UP::
-    QuickAction(false)
-    return
+~LWin UP::QuickAction(false)
 
 ; The Brightness quick action cycles through 5 different values from 0 to 100%.
 ; To lower the brightness, we can press the Brightness button 4 times.
 #+NumpadMult::
 #+F9::
     Loop, 4
-        QuickAction(1)
+        QuickAction(1)-
     return
 
 
@@ -61,7 +51,7 @@ QuickAction(new_qa) {
     ; Open or close Action Centre
     if (focused_qa = false) {
         Send #a
-        Send {Tab}
+        Send +{Tab}
         Send {Home}
         focused_qa := 1
     } else if (new_qa = false) {
