@@ -25,7 +25,6 @@ focused_qa := false
 
 #F12::QuickAction(4)
 
-
 ; Only enable the following hotkeys while the Action Centre is opened
 #If focused_qa
 
@@ -40,6 +39,23 @@ focused_qa := false
         QuickAction(1)-
     return
 
+; Alternative way to change brightness
+#IfWinNotActive, Control Panel\Hardware and Sound\Power Options
+#+PgUp::
+#+PgDn::
+    Run, powercfg.cpl
+    WinWait, Control Panel\Hardware and Sound\Power Options
+    ControlFocus, msctls_trackbar321, Control Panel\Hardware and Sound\Power Options
+    return
+
+#IfWinActive, Control Panel\Hardware and Sound\Power Options
+#+PgUp::PgUp
+#+PgDn::PgDn
+~LWin UP::WinClose
+Escape::WinClose
+
+
+; QuickAction function
 
 QuickAction(new_qa) {
     global focused_qa
