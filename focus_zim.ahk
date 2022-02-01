@@ -1,25 +1,18 @@
 #SingleInstance, Force
 SendMode Input
 
-Show(what) {
-    ToolTip, %what%
-    Sleep, 1000
-    ToolTip,
-}
+global ZimExecutable := "C:\Program Files\Zim Desktop Wiki\zim.exe"
+global ZimCriteria   := "ahk_exe zim.exe ahk_class gdkWindowToplevel"
 
 Launch() {
-    Run, C:\Program Files\Zim Desktop Wiki\zim.exe, , Min
-    WinWait ahk_exe zim.exe ahk_class gdkWindowToplevel
+    Run, %ZimExecutable%, , Min
+    WinWait % ZimCriteria
 }
 
-Run, C:\Program Files\Zim Desktop Wiki\zim.exe, , Min
-WinWait ahk_exe zim.exe ahk_class gdkWindowToplevel
+Launch()
 
 #z::
-    Show(WinExist("ahk_exe zim.exe ahk_class gdkWindowToplevel"))
-    if WinExist("ahk_exe zim.exe ahk_class gdkWindowToplevel")
-        WinActivate ahk_exe zim.exe ahk_class gdkWindowToplevel
-    else {
-        Run, C:\Program Files\Zim Desktop Wiki\zim.exe, , Min
-        WinWait ahk_exe zim.exe ahk_class gdkWindowToplevel
-    }
+    if WinExist(ZimCriteria)
+        WinActivate % ZimCriteria
+    else
+        Launch()
