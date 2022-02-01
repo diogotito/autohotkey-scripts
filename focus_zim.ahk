@@ -1,16 +1,25 @@
 #SingleInstance, Force
 SendMode Input
-SetWorkingDir, C:\tools\zim\
-SetTitleMatchMode, RegEx
 
-Run, C:\tools\zim\zim.exe , , Min
-WinWait, - Zim$ ahk_exe ^zim.exe$
+Show(what) {
+    ToolTip, %what%
+    Sleep, 1000
+    ToolTip,
+}
 
-#IfWinExist, - Zim$ ahk_exe ^zim.exe$
+Launch() {
+    Run, C:\Program Files\Zim Desktop Wiki\zim.exe, , Min
+    WinWait ahk_exe zim.exe ahk_class gdkWindowToplevel
+}
+
+Run, C:\Program Files\Zim Desktop Wiki\zim.exe, , Min
+WinWait ahk_exe zim.exe ahk_class gdkWindowToplevel
+
 #z::
-    OutputDebug, % If Win Exist
-    WinActivate
-#IfWinNotExist, - Zim$ ahk_exe ^zim.exe$
-#z::
-    OutputDebug, % If Win NOT Exist
-    Run, C:\tools\zim\zim.exe
+    Show(WinExist("ahk_exe zim.exe ahk_class gdkWindowToplevel"))
+    if WinExist("ahk_exe zim.exe ahk_class gdkWindowToplevel")
+        WinActivate ahk_exe zim.exe ahk_class gdkWindowToplevel
+    else {
+        Run, C:\Program Files\Zim Desktop Wiki\zim.exe, , Min
+        WinWait ahk_exe zim.exe ahk_class gdkWindowToplevel
+    }
