@@ -1,5 +1,5 @@
-; Match anywhere
-SetTitleMatchMode, 2
+#SingleInstance force
+SetTitleMatchMode 2  ; Match anywhere
 
 ;
 ; TODO #z para abrir a janela do/arrancar o Zim
@@ -22,7 +22,8 @@ RunWaitOne(command) {
 ; -----------------------------------------------------------------------------
 
 #+F5::
-	MsgBox,, desktops.ahk, Reloading..., 500
+	ToolTip % "============`n=   Reloading...   =`n============"
+	Sleep 500
 	Reload
 	return
 
@@ -90,32 +91,26 @@ showBrightness() {
 
 
 ; -----------------------------------------------------------------------------
+; Edit %PATH%
+; -----------------------------------------------------------------------------
+#+O::
+	Run SystemPropertiesAdvanced.exe
+	WinWait ahk_exe SystemPropertiesAdvanced.exe
+	Sleep 200
+	MsgBox ola
+	SendInput {Tab}{Tab}{Tab}{Space}
+	MsgBox adeus
+	return
+
+
+; -----------------------------------------------------------------------------
 ; Application shortcuts
 ; -----------------------------------------------------------------------------
-^#T::Run C:\Users\diogotito\AppData\Roaming\Telegram Desktop\Telegram.exe
-
-AppKey(executable, winCriteria) {
-	Run %executable%
-	WinWait %winCriteria%
-	WinActivate
-}
-
-^#S::Run subl
-^#C::Run "C:\Program Files\Microsoft VS Code\bin\code.cmd" "-r"
-
-
-; -----------------------------------------------------------------------------
-; Always On Top
-; -----------------------------------------------------------------------------
-#If NOT WinActive("ahk_exe idea64.exe") ; IntelliJ binds ^!t to "Surround With"
-	^!t::
-		Winset, Alwaysontop, Toggle, A
-		; animation
-		Winset, Transparent, 192, A
-		Sleep 100
-		Winset, Transparent, 255, A
-		return
-#if
+^#!T::Run C:\Users\diogotito\AppData\Roaming\Telegram Desktop\Telegram.exe
+^#!S::Run subl
+^#!C::Run "C:\Users\diogotito\AppData\Local\Programs\Microsoft VS Code\bin\code.cmd" "-r"
+^#C::SendInput !{Space}{{}
+^#!M::Run C:\Users\diogotito\AppData\Local\Programs\caprine\Caprine.exe
 
 #IfWinActive Defold Editor
 	F5::
@@ -127,9 +122,44 @@ AppKey(executable, winCriteria) {
 
 
 ; -----------------------------------------------------------------------------
-; Wox
+; Ctrl+Tab to switch between the two MRU tabs in Microsoft Edge using QuicKey
 ; -----------------------------------------------------------------------------
-#IfWinActive Wox ahk_exe Wox.exe
+#IfWinActive ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
+	^Tab::SendInput !z
+	^+Tab::SendInput !q
+
+
+; -----------------------------------------------------------------------------
+; PowerToys Run
+; -----------------------------------------------------------------------------
+#IfWinActive
+	#+w::
+		switcheroo() {
+			SendInput !{Space}^a{BackSpace}<{Space}
+
+			WinGet id, List
+			tiptext := "List of windows (" . id . "):"
+			Loop %id%
+			{
+				win_id := id%A_Index%
+				WinGetTitle win_title, ahk_id %win_id%
+				WinGet win_process, ProcessName, ahk_id %win_id%
+				WinGet win_minmax, MinMax, ahk_id %win_id%
+				tiptext .= Format("`n{1}   {2}", {-1: "[__]", 0: "[ r ]", 1: "[M]"}[win_minmax], win_title ? win_title : "(" . win_process . ")")
+			}
+			ToolTip %tiptext%, 1400,30
+			SetTimer check_powertoys_run, 50
+			return
+
+			check_powertoys_run:
+				if (NOT WinActive("ahk_exe PowerToys.PowerLauncher.exe")) {
+					ToolTip,,
+					SetTimer check_powertoys_run, Off
+				}
+				return
+		}
+
+#IfWinActive ahk_exe PowerToys.PowerLauncher.exe
 	; Emacs-style keybindings
 	^b::SendInput {Left}
 	^f::SendInput {Right}
@@ -152,7 +182,7 @@ AppKey(executable, winCriteria) {
 	^m::SendInput {Enter}
 
 	; Custom prefixes
-	!w::SendInput {End}+{Home}^xwin{Space}^v{Home}^{Right}+{End}
+	!w::SendInput {End}+{Home}^x<{Space}^v{Home}^{Right}+{End}
 	!s::SendInput {End}+{Home}^xd{Space}^v{Home}^{Right}+{End}
 
 	; Custom shortcuts
