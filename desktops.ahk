@@ -112,6 +112,23 @@ showBrightness() {
 ^#C::SendInput !{Space}{{}
 ^#!M::Run C:\Users\diogotito\AppData\Local\Programs\caprine\Caprine.exe
 
+; Open Bitwarden and click "Unlock with Windows Hello"
+^#!B::
+	OpenBitwarden() {
+		Run "C:\Program Files\Bitwarden\Bitwarden.exe"
+
+		CRITERIA = Bitwarden ahk_exe Bitwarden.exe ahk_class Chrome_WidgetWin_1
+
+		WinWait %CRITERIA%
+		WinGetPos X, Y, Width, Height
+		btn_x := X + Width  / 2 + 65
+		btn_y := Y + Height / 2 + 145
+		DllCall("SetCursorPos", "int", btn_x, "int", btn_y)
+		MouseClick
+	}
+
+
+
 #IfWinActive Defold Editor
 	F5::
 		SendInput, ^s^b
