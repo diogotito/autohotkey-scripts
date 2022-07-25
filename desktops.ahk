@@ -40,8 +40,14 @@ RunWaitOne(command) {
 	return
 
 #Enter::
-	Run, wt.exe    ; Fancy PowerShell in fancy Windows Terminal
-	return
+	OpenWindowsTerminal() {
+		WindowsTerminal = ahk_class CASCADIA_HOSTING_WINDOW_CLASS ahk_exe WindowsTerminal.exe
+		if not WinExist(WindowsTerminal) {
+			Run wt.exe
+			WinWait % WindowsTerminal
+		}
+		WinActivate % WindowsTerminal
+	}
 
 
 ; -----------------------------------------------------------------------------
@@ -98,6 +104,7 @@ showBrightness() {
 	WinWait ahk_exe SystemPropertiesAdvanced.exe
 	Sleep 200
 	MsgBox ola
+	Sleep 200
 	SendInput {Tab}{Tab}{Tab}{Space}
 	MsgBox adeus
 	return
@@ -126,8 +133,6 @@ showBrightness() {
 		DllCall("SetCursorPos", "int", btn_x, "int", btn_y)
 		MouseClick
 	}
-
-
 
 #IfWinActive Defold Editor
 	F5::
