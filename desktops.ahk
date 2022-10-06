@@ -193,7 +193,9 @@ showBrightness() {
 				WinGetTitle win_title, ahk_id %win_id%
 				WinGet win_process, ProcessName, ahk_id %win_id%
 				WinGet win_minmax, MinMax, ahk_id %win_id%
-				tiptext .= Format("`n{1}   {2}", {-1: "[__]", 0: "[ r ]", 1: "[M]"}[win_minmax], win_title ? win_title : "(" . win_process . ")")
+				tiptext .= Format("`n{1}   {2}"
+				                 ,{-1: "[__]", 0: "[ r ]", 1: "[M]"}[win_minmax]
+								 ,win_title ? win_title : "(" . win_process . ")")
 			}
 			ToolTip %tiptext%, 1400,30
 			SetTimer check_powertoys_run, 50
