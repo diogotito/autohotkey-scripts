@@ -99,16 +99,7 @@ showBrightness() {
 ; -----------------------------------------------------------------------------
 ; Edit %PATH%
 ; -----------------------------------------------------------------------------
-#+O::
-	Run SystemPropertiesAdvanced.exe
-	WinWait ahk_exe SystemPropertiesAdvanced.exe
-	Sleep 200
-	MsgBox ola
-	Sleep 200
-	SendInput {Tab}{Tab}{Tab}{Space}
-	MsgBox adeus
-	return
-
+#+O::Run SystemPropertiesAdvanced.exe
 
 ; -----------------------------------------------------------------------------
 ; Application shortcuts
