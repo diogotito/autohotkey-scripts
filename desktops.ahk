@@ -159,6 +159,22 @@ showBrightness() {
 	!+5::SendInput ^l+5{Space}  ; open tabs
 	!+6::SendInput ^l+6{Space}  ; history
 	!+8::SendInput ^l+8{Space}  ; bookmarks
+	!+=::SendInput ^l+={Space}  ; bookmarks with tags
+	!+?::
+		ToolTip,
+		( LTrim %
+			Autocomplete modifiers
+			~~~~~~~~~~~~~~~~
+			Title or tag`t3  # 
+			URL`t`t4  $ 
+			Open tabs`t5  % 
+			History`t`t6  ^ 
+			Bookmarks`t8   * 
+			Tags`t`t    +
+			Search suggestions     ?
+		)
+		Sleep 5000
+		ToolTip,,
 
 
 ; -----------------------------------------------------------------------------
