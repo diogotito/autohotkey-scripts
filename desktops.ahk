@@ -154,7 +154,11 @@ showBrightness() {
 ; Firefox's Awesome Bar shortcuts
 ; -----------------------------------------------------------------------------
 #IfWinActive Mozilla Firefox
-	!+*::SendInput ^l*{Space}
+	!+3::SendInput ^l+3{Space}  ; every search term is part of title or tag
+	!+4::SendInput ^l+4{Space}  ; every search term is part of the URL
+	!+5::SendInput ^l+5{Space}  ; open tabs
+	!+6::SendInput ^l+6{Space}  ; history
+	!+8::SendInput ^l+8{Space}  ; bookmarks
 
 
 ; -----------------------------------------------------------------------------
