@@ -107,8 +107,11 @@ showBrightness() {
 ^#!T::Run C:\Users\diogotito\AppData\Roaming\Telegram Desktop\Telegram.exe
 ^#!S::Run subl
 ^#!C::Run "C:\Users\diogotito\AppData\Local\Programs\Microsoft VS Code\bin\code.cmd" "-r"
+^#!P::Run C:\Users\diogotito\AppData\Local\SumatraPDF\SumatraPDF.exe
+^#!L::Run C:\Program Files\texstudio\texstudio.exe
 ^#C::SendInput !{Space}{{}
 ^#!M::Run C:\Users\diogotito\AppData\Local\Programs\caprine\Caprine.exe
+^#!O::Run C:\Users\diogotito\AppData\Local\Obsidian\Obsidian.exe
 
 ; Open Bitwarden and click "Unlock with Windows Hello"
 ^#!B::
@@ -181,6 +184,7 @@ showBrightness() {
 ; PowerToys Run
 ; -----------------------------------------------------------------------------
 #IfWinActive
+	#w::
 	#+w::
 		switcheroo() {
 			SendInput !{Space}^a{BackSpace}<{Space}
