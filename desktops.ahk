@@ -20,6 +20,19 @@ RunWaitOne(command) {
     return exec.StdOut.ReadAll()
 }
 ; -----------------------------------------------------------------------------
+; Switch to an app's window if it's running, otherwise launch it
+; -----------------------------------------------------------------------------
+SwitchOrLaunch(win_criteria, launch_command) {
+	; Find cloaked windows (i.e. in a non-active virtual desktop) too
+	DetectHiddenWindows, On
+
+	if not WinExist(win_criteria) {
+		Run % launch_command
+		WinWait % win_criteria
+	}
+	WinActivate % win_criteria
+}
+; -----------------------------------------------------------------------------
 
 #+F5::
 	ToolTip % "============`n=   Reloading...   =`n============"
@@ -35,20 +48,8 @@ RunWaitOne(command) {
 ; -----------------------------------------------------------------------------
 ; I want to open a terminal with a hotkey
 ; -----------------------------------------------------------------------------
-#+Enter::
-	Run, cmd.exe   ; Shows up instantly and doesnt't take 1 to 30 seconds to start up
-	return
-
-#Enter::
-	OpenWindowsTerminal() {
-		WindowsTerminal = ahk_class CASCADIA_HOSTING_WINDOW_CLASS ahk_exe WindowsTerminal.exe
-		if not WinExist(WindowsTerminal) {
-			Run wt.exe
-			WinWait % WindowsTerminal
-		}
-		WinActivate % WindowsTerminal
-	}
-
+#+Enter::Run, cmd.exe   ; Shows up instantly and doesnt't take 1 to 30 seconds to start up
+#Enter::SwitchOrLaunch("ahk_class CASCADIA_HOSTING_WINDOW_CLASS ahk_exe WindowsTerminal.exe", "wt.exe")
 
 ; -----------------------------------------------------------------------------
 ; Monitor brightness through Monitorian
@@ -106,12 +107,16 @@ showBrightness() {
 ; -----------------------------------------------------------------------------
 ^#!T::Run C:\Users\diogotito\AppData\Roaming\Telegram Desktop\Telegram.exe
 ^#!S::Run subl
-^#!C::Run "C:\Users\diogotito\AppData\Local\Programs\Microsoft VS Code\bin\code.cmd" "-r"
 ^#!P::Run C:\Users\diogotito\AppData\Local\SumatraPDF\SumatraPDF.exe
 ^#!L::Run C:\Program Files\texstudio\texstudio.exe
 ^#C::SendInput !{Space}{{}
 ^#!M::Run C:\Users\diogotito\AppData\Local\Programs\caprine\Caprine.exe
 ^#!O::Run C:\Users\diogotito\AppData\Local\Obsidian\Obsidian.exe
+
+; VS Code window group
+; ^#!C::Run "C:\Users\diogotito\AppData\Local\Programs\Microsoft VS Code\bin\code.cmd" "-r"
+^#!C::SwitchOrLaunch("Visual Studio Code", """C:\Users\diogotito\AppData\Local\Programs\Microsoft VS Code\bin\code.cmd"" ""-r""")
+
 
 ; Open Bitwarden and click "Unlock with Windows Hello"
 ^#!B::
