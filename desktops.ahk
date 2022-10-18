@@ -2,10 +2,19 @@
 SetTitleMatchMode 2  ; Match anywhere
 
 ; -----------------------------------------------------------------------------
-; Eagerly load some libraries of functions from the local library (Lib\)
+; Local library
 ; -----------------------------------------------------------------------------
 RunWaitOne_PrepareHiddenWindow()
+Zim_Launch()
+#Include Lib\MonitorianKeys.ahk
+#Include Lib\PowerToysRunKeys.ahk
+#Include Lib\Switch-Windows-same-App.ahk
+
 ; -----------------------------------------------------------------------------
+
+#z::Zim()
+
+; == End of auto-execute section ==============================================
 
 #+F5::
 	ToolTip % "============`n=   Reloading...   =`n============"
@@ -22,73 +31,36 @@ RunWaitOne_PrepareHiddenWindow()
 ; I want to open a terminal with a hotkey
 ; -----------------------------------------------------------------------------
 #+Enter::Run, cmd.exe   ; Shows up instantly and doesnt't take 1 to 30 seconds to start up
-#Enter::CycleOrLaunch("ahk_class CASCADIA_HOSTING_WINDOW_CLASS ahk_exe WindowsTerminal.exe", "wt.exe")
+#Enter::CycleOrLaunch(
+	,"ahk_class CASCADIA_HOSTING_WINDOW_CLASS ahk_exe WindowsTerminal.exe"
+	, "wt.exe")
 
-; -----------------------------------------------------------------------------
-; Monitor brightness through Monitorian
-; -----------------------------------------------------------------------------
-#+NumpadAdd::
-	Run, Monitorian.exe /set all +15
-	c := "[+] Increasing brightness...."
-	SetTimer, showBrightness, -1  ; 1 ms timeout (-) to run in another "thread"
-	return
-
-#+NumpadSub::
-	Run, Monitorian.exe /set all -15
-	c := "[-] Reducing brightness...."
-	SetTimer, showBrightness, -1  ; 1 ms timeout (-) to run in another "thread"
-	return
-
-showBrightness() {
-	global
-	; ListVars
-	Gosub, UpdateTooltip
-	output := RunWaitOne("Monitorian.exe /get all")
-	brightness := StrSplit(output, A_Space)[3]
-	bar := ""
-	MouseGetPos, mouseX, mouseY
-	Loop, 15 {
-		delta := (A_Index - 1)/(15) * 100 - brightness
-		; bar .= Format("[{:.2f}]", delta)
-		bar .= delta < 0 ? "#" : delta < (15) ? ": " : "- "
-	}
-	tipText := "Brightness: " brightness " / 100`n[" bar "]"
-
-	CoordMode, ToolTip, Screen
-	; c := "_______________"
-	SetTimer, UpdateTooltip, 30
-	return
-
-	UpdateTooltip:
-		if c := SubStr(c, 1, -1) {
-			ToolTip, % c . "`n" . tipText, % mouseX, % mouseY
-		} else {
-			ToolTip,,
-			SetTimer, UpdateTooltip, Off
-		}
-		return
-}
-
-
-; -----------------------------------------------------------------------------
-; Edit %PATH%
-; -----------------------------------------------------------------------------
 #+O::Run SystemPropertiesAdvanced.exe
 
 ; -----------------------------------------------------------------------------
 ; Application shortcuts
 ; -----------------------------------------------------------------------------
-^#!T::Run C:\Users\diogotito\AppData\Roaming\Telegram Desktop\Telegram.exe
 ^#!S::Run subl
+^#!T::Run C:\Users\diogotito\AppData\Roaming\Telegram Desktop\Telegram.exe
 ^#!P::Run C:\Users\diogotito\AppData\Local\SumatraPDF\SumatraPDF.exe
 ^#!L::Run C:\Program Files\texstudio\texstudio.exe
-^#C::SendInput !{Space}{{}
 ^#!M::Run C:\Users\diogotito\AppData\Local\Programs\caprine\Caprine.exe
 ^#!O::Run C:\Users\diogotito\AppData\Local\Obsidian\Obsidian.exe
 
 ; VS Code window group
-; ^#!C::Run "C:\Users\diogotito\AppData\Local\Programs\Microsoft VS Code\bin\code.cmd" "-r"
-^#!C::CycleOrLaunch("Visual Studio Code", """C:\Users\diogotito\AppData\Local\Programs\Microsoft VS Code\bin\code.cmd"" ""-r""")
+^#!C::CycleOrLaunch(
+	,"Visual Studio Code"
+	, "
+( LTrim Comments Join`s
+	""C:\Users\diogotito\AppData\Local\Programs\Microsoft VS Code\bin\code.cmd""
+	; Forces opening a file or folder in the last active window.
+	""--reuse-window""
+)")
+
+^#!+F::Run "C:\Program Files\Mozilla Firefox\firefox.exe"
+^#!F::CycleOrLaunch("BrowserWindows"
+	, "Mozilla Firefox ahk_class MozillaWindowClass"
+	, "C:\Program Files\Mozilla Firefox\firefox.exe")
 
 
 ; Open Bitwarden and click "Unlock with Windows Hello"
@@ -156,67 +128,3 @@ showBrightness() {
 		)
 		Sleep 5000
 		ToolTip,,
-
-
-; -----------------------------------------------------------------------------
-; PowerToys Run
-; -----------------------------------------------------------------------------
-#IfWinActive
-	#w::
-	#+w::
-		switcheroo() {
-			SendInput !{Space}^a{BackSpace}<{Space}
-
-			WinGet id, List
-			tiptext := "List of windows (" . id . "):"
-			Loop %id%
-			{
-				win_id := id%A_Index%
-				WinGetTitle win_title, ahk_id %win_id%
-				WinGet win_process, ProcessName, ahk_id %win_id%
-				WinGet win_minmax, MinMax, ahk_id %win_id%
-				tiptext .= Format("`n{1}   {2}"
-				                 ,{-1: "[__]", 0: "[ r ]", 1: "[M]"}[win_minmax]
-								 ,win_title ? win_title : "(" . win_process . ")")
-			}
-			ToolTip %tiptext%, 1400,30
-			SetTimer check_powertoys_run, 50
-			return
-
-			check_powertoys_run:
-				if (NOT WinActive("ahk_exe PowerToys.PowerLauncher.exe")) {
-					ToolTip,,
-					SetTimer check_powertoys_run, Off
-				}
-				return
-		}
-
-#IfWinActive ahk_exe PowerToys.PowerLauncher.exe
-	; Emacs-style keybindings
-	^b::SendInput {Left}
-	^f::SendInput {Right}
-	!b::SendInput ^{Left}      ; word left
-	!f::SendInput ^{Right}     ; word right
-	!a::SendInput {Home}       ; end
-	!e::SendInput {End}        ; beginning of line
-	^e::SendInput {End}        ; beginning of line
-	+!b::SendInput +^{Left}    ; 
-	+!f::SendInput +^{Right}   ; 
-	+^a::SendInput +{Home}     ; 
-	+^e::SendInput +{End}      ; 
-	^w::SendInput ^+{Left}^x
-	!BackSpace::SendInput ^+{Left}^x
-	!d::SendInput ^+{Right}^x
-	^u::SendInput +{Home}^x
-	!k::SendInput +{End}^x
-	^y::SendInput ^v
-	!r::SendInput ^a{BackSpace}
-	^m::SendInput {Enter}
-
-	; Custom prefixes
-	!w::SendInput {End}+{Home}^x<{Space}^v{Home}^{Right}+{End}
-	!s::SendInput {End}+{Home}^xd{Space}^v{Home}^{Right}+{End}
-
-	; Custom shortcuts
-	^,::SendEvent ^asettings
-	
