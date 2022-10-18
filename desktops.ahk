@@ -1,37 +1,10 @@
 #SingleInstance force
 SetTitleMatchMode 2  ; Match anywhere
 
-;
-; TODO #z para abrir a janela do/arrancar o Zim
-;
-
 ; -----------------------------------------------------------------------------
-; Run commands and capture their output without an annoying window showing up
+; Eagerly load some libraries of functions from the local library (Lib\)
 ; -----------------------------------------------------------------------------
-DllCall("AllocConsole")
-WinHide % "ahk_id " DllCall("GetConsoleWindow", "ptr")
-
-RunWaitOne(command) {
-    ; WshShell object: http://msdn.microsoft.com/en-us/library/aew9yb99 ¬
-    shell := ComObjCreate("WScript.Shell")
-    ; Execute a single command via cmd.exe
-    exec := shell.Exec(ComSpec " /C " command)
-    ; Read and return the command's output
-    return exec.StdOut.ReadAll()
-}
-; -----------------------------------------------------------------------------
-; Switch to an app's window if it's running, otherwise launch it
-; -----------------------------------------------------------------------------
-SwitchOrLaunch(win_criteria, launch_command) {
-	; Find cloaked windows (i.e. in a non-active virtual desktop) too
-	DetectHiddenWindows, On
-
-	if not WinExist(win_criteria) {
-		Run % launch_command
-		WinWait % win_criteria
-	}
-	WinActivate % win_criteria
-}
+RunWaitOne_PrepareHiddenWindow()
 ; -----------------------------------------------------------------------------
 
 #+F5::
@@ -49,7 +22,7 @@ SwitchOrLaunch(win_criteria, launch_command) {
 ; I want to open a terminal with a hotkey
 ; -----------------------------------------------------------------------------
 #+Enter::Run, cmd.exe   ; Shows up instantly and doesnt't take 1 to 30 seconds to start up
-#Enter::SwitchOrLaunch("ahk_class CASCADIA_HOSTING_WINDOW_CLASS ahk_exe WindowsTerminal.exe", "wt.exe")
+#Enter::CycleOrLaunch("ahk_class CASCADIA_HOSTING_WINDOW_CLASS ahk_exe WindowsTerminal.exe", "wt.exe")
 
 ; -----------------------------------------------------------------------------
 ; Monitor brightness through Monitorian
@@ -115,7 +88,7 @@ showBrightness() {
 
 ; VS Code window group
 ; ^#!C::Run "C:\Users\diogotito\AppData\Local\Programs\Microsoft VS Code\bin\code.cmd" "-r"
-^#!C::SwitchOrLaunch("Visual Studio Code", """C:\Users\diogotito\AppData\Local\Programs\Microsoft VS Code\bin\code.cmd"" ""-r""")
+^#!C::CycleOrLaunch("Visual Studio Code", """C:\Users\diogotito\AppData\Local\Programs\Microsoft VS Code\bin\code.cmd"" ""-r""")
 
 
 ; Open Bitwarden and click "Unlock with Windows Hello"
