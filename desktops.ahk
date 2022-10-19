@@ -6,15 +6,19 @@ SetTitleMatchMode 2  ; Match anywhere
 ; -----------------------------------------------------------------------------
 RunWaitOne_PrepareHiddenWindow()
 Zim_Launch()
+#Include Lib\VD.ahk
 #Include Lib\MonitorianKeys.ahk
 #Include Lib\PowerToysRunKeys.ahk
 #Include Lib\Switch-Windows-same-App.ahk
-#Include Lib\VirtualDesktopKeys.ahk
 ; -----------------------------------------------------------------------------
 
 #z::Zim()
 
 ; == End of auto-execute section ==============================================
+
+; -----------------------------------------------------------------------------
+; Debugging aids
+; -----------------------------------------------------------------------------
 
 #+F5::
 	ToolTip % "============`n=   Reloading...   =`n============"
@@ -23,9 +27,20 @@ Zim_Launch()
 	return
 
 
-#+Q::
-	SendInput !{F4}
-	return
+; -----------------------------------------------------------------------------
+; Enhanced Windows desktop workflows
+; -----------------------------------------------------------------------------
+
+#+Q::SendInput !{F4}
+
+#+O::Run SystemPropertiesAdvanced.exe
+
+^#!1::VD_GoToDesktopNumber(0)
+^#!2::VD_GoToDesktopNumber(1)
+^#!3::VD_GoToDesktopNumber(2)
+^#!4::VD_GoToDesktopNumber(3)
+^#!5::VD_GoToDesktopNumber(4)
+^#!6::VD_GoToDesktopNumber(5)
 
 ; -----------------------------------------------------------------------------
 ; I want to open a terminal with a hotkey
@@ -35,7 +50,6 @@ Zim_Launch()
 	,"ahk_class CASCADIA_HOSTING_WINDOW_CLASS ahk_exe WindowsTerminal.exe"
 	, "wt.exe")
 
-#+O::Run SystemPropertiesAdvanced.exe
 
 ; -----------------------------------------------------------------------------
 ; Application shortcuts
