@@ -64,7 +64,10 @@ _COL_ShowGroupInTooltip(group_name) {
 	text := "Windows in " SubStr(group_name, 3)
 	text .= "`n--------------------------------------"
 	For i, window in _COL_GetWindowsInGroup(group_name) {
-		text .= "`n" (i == 1 ? "*" : i) ") " window.name
+		text .= "`n"
+		text .= (i = 1) ? "*" : window.is_newest ? ">" : i
+		text .= ") "
+		text .= window.name
 	}
 
 	ToolTip, %text%,,, %_GROUP_TOOLTIP%
@@ -82,7 +85,9 @@ _COL_GetWindowsInGroup(group_name) {
 	Loop, %pseudo_array% {
 		window_id := pseudo_array%A_Index%
 		WinGetTitle, window_name, ahk_id %window_id%
-		Array.Push({id: window_id, name: window_name})
+		Array.Push({ id: window_id
+		           , name: window_name
+				   , is_newest: A_Index = pseudo_array })
 	}
 	return Array
 }
