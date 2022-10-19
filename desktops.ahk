@@ -130,12 +130,17 @@ Zim_Launch()
 ; Lib\Zim.ahk
 #z::Zim()
 
+; 7-Zip File Manager
+^#!Z::CycleOrLaunch("7zFM"
+    , "ahk_class FM ahk_exe 7zFM.exe"
+    , """C:\Program Files\7-Zip\7zFM.exe""")
+
 ; Sublime text
 ^#!S::CycleOrLaunch("SublimeText"
     , " - Sublime Text ahk_class PX_WINDOW_CLASS ahk_exe sublime_text.exe"
     , "subl")
 
-; VS Code window group  -- because this takes 1 sec: ^#!C::RunWaitOne("code -r")
+; VS Code window group  -- because ^#!C::RunWaitOne("code -r") is a bit slow
 ^#!C::CycleOrLaunch("VSCode"
     , " - Visual Studio Code ahk_class Chrome_WidgetWin_1 ahk_exe Code.exe"
     , """code"" --reuse-window")
