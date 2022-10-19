@@ -1,20 +1,20 @@
-Zim_Launch() {
-    ZimExecutable = "C:\Program Files\Zim Desktop Wiki\zim.exe"
-    ZimCriteria   = ahk_exe zim.exe ahk_class gdkWindowToplevel
+Zim_Executable() {
+    return """C:\Program Files\Zim Desktop Wiki\zim.exe"""
+}
 
-    Run %ZimExecutable% --plugin trayicon
+Zim_Criteria() {
+    return "ahk_exe zim.exe ahk_class gdkWindowToplevel"
+}
+
+Zim_Launch() {
+    Run % Zim_Executable() " --plugin trayicon"
     Sleep 500
-    Run % ZimExecutable
+    ; Run % ZimExecutable()
 }
 
 Zim() {
-    ; WHY AREN'T THESE HERE
-    ZimExecutable = "C:\Program Files\Zim Desktop Wiki\zim.exe"
-    ZimCriteria   = ahk_exe zim.exe ahk_class gdkWindowToplevel
-    MsgBox,,, Exec = %ZimExecutable%`nCrit = %ZimCriteria%, 1
-
     DetectHiddenWindows Off
-    if WinExist(ZimCriteria) {
+    if WinExist(Zim_Criteria()) {
         ; There is a unhidden Zim window. Toggle it.
         if WinActive()
             WinMinimize
@@ -24,7 +24,7 @@ Zim() {
     }
 
     DetectHiddenWindows On
-    if WinExist(ZimCriteria) {
+    if WinExist(Zim_Criteria()) {
         ; The window is minimized to the system tray.
         ; Use standard Windows hotkeys to "click" the icon.
         CoordMode Mouse, Screen
@@ -38,8 +38,8 @@ Zim() {
     } else {
         ; There isn't any Zim window. Relaunch it.
         ToolTip Launching zim.exe`nto bring up the notebook...
-        Run % ZimExecutable
-        WinWait % ZimCriteria
+        Run % ZimExecutable()
+        WinWait % Zim_Criteria()
         ToolTip,,
     }
 }
