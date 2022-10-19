@@ -34,9 +34,7 @@ Zim_Launch()
 #+Q::SendInput !{F4}
 
 ; Cycle between File Explorer windows
-^#!X::CycleOrLaunch("FileExplorer"
-	, "ahk_class CabinetWClass"
-	, "explorer.exe")
+^#!X::CycleOrLaunch("FileExplorer", "ahk_class CabinetWClass", "explorer.exe")
 
 ; Frequently accessed settings
 #+O::Run SystemPropertiesAdvanced.exe
