@@ -9,7 +9,7 @@ Zim_Launch()
 #Include Lib\MonitorianKeys.ahk
 #Include Lib\PowerToysRunKeys.ahk
 #Include Lib\Switch-Windows-same-App.ahk
-
+#Include Lib\VirtualDesktopKeys.ahk
 ; -----------------------------------------------------------------------------
 
 #z::Zim()
