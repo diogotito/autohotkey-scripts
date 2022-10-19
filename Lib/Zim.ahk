@@ -9,7 +9,7 @@ Zim_Criteria() {
 Zim_Launch() {
     Run % Zim_Executable() " --plugin trayicon"
     Sleep 500
-    ; Run % ZimExecutable()
+    ; Run % Zim_Executable()
 }
 
 Zim() {
@@ -38,7 +38,7 @@ Zim() {
     } else {
         ; There isn't any Zim window. Relaunch it.
         ToolTip Launching zim.exe`nto bring up the notebook...
-        Run % ZimExecutable()
+        Run % Zim_Executable()
         WinWait % Zim_Criteria()
         ToolTip,,
     }
