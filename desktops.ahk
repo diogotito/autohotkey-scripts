@@ -1,37 +1,50 @@
+; =============================================================================
+; desktops.ahk:
+; The entry point to a bunch of utilities and hotkeys
+; -----------------------------------------------------------------------------
+; Organization:
+;   1. Local library
+;   2. Development aids
+;   3. Enhanced Windows desktop workflows
+;   4. Hotstrings
+;   5. Application shortcuts
+;   6. Hotkeys to cycle between window groups -- see Lib\CycleOrLaunch.ahk
+;   7. Misc hotkeys
+; =============================================================================
+
 #SingleInstance force
 SetTitleMatchMode 2  ; Match anywhere
 
 ; -----------------------------------------------------------------------------
-; Local library
+; 1. Local library
 ; -----------------------------------------------------------------------------
 RunWaitOne_PrepareHiddenWindow()
 Zim_Launch()
 #Include Lib\VD.ahk
 #Include Lib\CycleOrLaunch.ahk
+; !!! End of auto-execute section !!!  Only hotkeys/hotstrings from here on!
 #Include Lib\MonitorianKeys.ahk
 #Include Lib\PowerToysRunKeys.ahk
 #Include Lib\Switch-Windows-same-App.ahk
 ; -----------------------------------------------------------------------------
 
-; == End of auto-execute section ==============================================
-
 
 ; -----------------------------------------------------------------------------
-; Development aids
+; 2. Development aids
 ; -----------------------------------------------------------------------------
 
 ; Reload this hotkey with a keybinding -- Remeber to save first!
 #+F5::
-	ToolTip % "============`n=   Reloading...   =`n============"
-	Sleep 300
-	Reload
-	return
+    ToolTip % "============`n=   Reloading...   =`n============"
+    Sleep 300
+    Reload
+    return
 
 ; Quickly open this project in VS Code
 ^#!F5::Run, %A_ComSpec% /c "code %A_ScriptDir%"
 
 ; -----------------------------------------------------------------------------
-; Enhanced Windows desktop workflows
+; 3. Enhanced Windows desktop workflows
 ; -----------------------------------------------------------------------------
 
 ; More ergonomic window management
@@ -43,7 +56,17 @@ Zim_Launch()
 ; Frequently accessed settings
 #+O::Run SystemPropertiesAdvanced.exe
 
+; I want to open a terminal with a hotkey
+#+Enter::Run, CMD.EXE
+#Enter::CycleOrLaunch("WindowsTerminal"
+    ,"ahk_class CASCADIA_HOSTING_WINDOW_CLASS ahk_exe WindowsTerminal.exe"
+    , "wt.exe")
+
 ; Virtual desktops (courtesy of Ciantic/VirtualDesktopAccessor)
+; BTW https://github.com/Grabacr07/SylphyHorn goes well with this
+; I use it to:
+;   * Show the current desktop number / number of total desktops in the tray
+;   * Move windows to adjacent desktops with keyboard shortcuts
 #n::VD_GoToNextDesktop()
 #+n::VD_GoToPrevDesktop()
 
@@ -78,15 +101,15 @@ Zim_Launch()
 ^#!Numpad0::VD_GoToDesktopNumber(9)
 
 
-; I want to open a terminal with a hotkey
-#+Enter::Run, CMD.EXE
-#Enter::CycleOrLaunch("WindowsTerminal"
-	,"ahk_class CASCADIA_HOSTING_WINDOW_CLASS ahk_exe WindowsTerminal.exe"
-	, "wt.exe")
-
+; -----------------------------------------------------------------------------
+; 4. Hotstrings
+; -----------------------------------------------------------------------------
+; TODO
+; I haven't come up with good ideas for hotstrings and I never felt the need
+; But there are a few in Hillel's blog: https://www.hillelwayne.com/post/ahk/
 
 ; -----------------------------------------------------------------------------
-; Application shortcuts
+; 5. Application shortcuts
 ; -----------------------------------------------------------------------------
 ^#!T::Run C:\Users\diogotito\AppData\Roaming\Telegram Desktop\Telegram.exe
 ^#!P::Run C:\Users\diogotito\AppData\Local\SumatraPDF\SumatraPDF.exe
@@ -95,103 +118,107 @@ Zim_Launch()
 ^#!O::Run C:\Users\diogotito\AppData\Local\Obsidian\Obsidian.exe
 
 ; -----------------------------------------------------------------------------
-; Workflows
+; 6. Hotkeys to cycle between window groups -- see Lib\CycleOrLaunch.ahk
 ; -----------------------------------------------------------------------------
 
 ; Help & Documentation windows
 ^#!H::CycleOrLaunch("Docs"
-	, [ "DevDocs ahk_class Chrome_WidgetWin_1"
-	  , "ahk_class HH Parent" ]
-	, "")
+    , [ "DevDocs ahk_class Chrome_WidgetWin_1"
+      , "ahk_class HH Parent" ]
+    , "")
 
 ; Lib\Zim.ahk
 #z::Zim()
 
 ; Sublime text
 ^#!S::CycleOrLaunch("SublimeText"
-	, " - Sublime Text ahk_class PX_WINDOW_CLASS ahk_exe sublime_text.exe"
-	, "subl")
+    , " - Sublime Text ahk_class PX_WINDOW_CLASS ahk_exe sublime_text.exe"
+    , "subl")
 
 ; VS Code window group  -- because this takes 1 sec: ^#!C::RunWaitOne("code -r")
 ^#!C::CycleOrLaunch("VSCode"
-	, " - Visual Studio Code ahk_class Chrome_WidgetWin_1 ahk_exe Code.exe"
-	, """code"" --reuse-window")
+    , " - Visual Studio Code ahk_class Chrome_WidgetWin_1 ahk_exe Code.exe"
+    , """code"" --reuse-window")
 
 ^#!F::CycleOrLaunch("BrowserWindows"
-	, "Mozilla Firefox ahk_class MozillaWindowClass"
-	, "C:\Program Files\Mozilla Firefox\firefox.exe")
+    , "Mozilla Firefox ahk_class MozillaWindowClass"
+    , "C:\Program Files\Mozilla Firefox\firefox.exe")
 ^#!+F::Run "C:\Program Files\Mozilla Firefox\firefox.exe"
 
 ^#!G::CycleOrLaunch("GitGUIs"
-	, [ "Git Gui ahk_class TkTopLevel ahk_exe wish.exe"
-	  , "gitk ahk_class TkTopLevel ahk_exe wish.exe"
-	  , "WinMerge ahk_class WinMergeWindowClassW"
-	  , "Fork ahk_class HwndWrapper[Fork.exe;; ahk_exe Fork.exe"])
+    , [ "Git Gui ahk_class TkTopLevel ahk_exe wish.exe"
+      , "gitk ahk_class TkTopLevel ahk_exe wish.exe"
+      , "WinMerge ahk_class WinMergeWindowClassW"
+      , "Fork ahk_class HwndWrapper[Fork.exe;; ahk_exe Fork.exe"])
 
+
+; -----------------------------------------------------------------------------
+; 7. Misc hotkeys
+; -----------------------------------------------------------------------------
 
 ; Open Bitwarden and click "Unlock with Windows Hello"
 ^#!B::
-	OpenBitwarden() {
-		Run "C:\Program Files\Bitwarden\Bitwarden.exe"
+    OpenBitwarden() {
+        Run "C:\Program Files\Bitwarden\Bitwarden.exe"
 
-		CRITERIA = Bitwarden ahk_exe Bitwarden.exe ahk_class Chrome_WidgetWin_1
+        CRITERIA = Bitwarden ahk_exe Bitwarden.exe ahk_class Chrome_WidgetWin_1
 
-		WinWait %CRITERIA%
-		WinGetPos X, Y, Width, Height
-		btn_x := X + Width  / 2 + 65
-		btn_y := Y + Height / 2 + 145
-		DllCall("SetCursorPos", "int", btn_x, "int", btn_y)
-		MouseClick
-	}
+        WinWait %CRITERIA%
+        WinGetPos X, Y, Width, Height
+        btn_x := X + Width  / 2 + 65
+        btn_y := Y + Height / 2 + 145
+        DllCall("SetCursorPos", "int", btn_x, "int", btn_y)
+        MouseClick
+    }
 
 #IfWinActive Defold Editor
-	F5::
-		SendInput, ^s^b
-		ToolTip, F5 >>> Ctrl + B`nBuild Project
-		Sleep 500
-		ToolTip,,
-		return
+    F5::
+        SendInput, ^s^b
+        ToolTip, F5 >>> Ctrl + B`nBuild Project
+        Sleep 500
+        ToolTip,,
+        return
 
 
 ; -----------------------------------------------------------------------------
 ; Ctrl+Tab to switch between the two MRU tabs in Microsoft Edge using QuicKey
 ; -----------------------------------------------------------------------------
 #IfWinActive ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
-	^Tab::SendInput !z
-	^+Tab::SendInput !q
+    ^Tab::SendInput !z
+    ^+Tab::SendInput !q
 
 
 ; -----------------------------------------------------------------------------
 ; TeXstudio (MRU)
 ; -----------------------------------------------------------------------------
 #IfWinActive TeXstudio
-	^Tab::SendInput ^o{Enter}
-	^+Tab::SendInput ^o{Enter}
+    ^Tab::SendInput ^o{Enter}
+    ^+Tab::SendInput ^o{Enter}
 
 
 ; -----------------------------------------------------------------------------
 ; Firefox's Awesome Bar shortcuts
 ; -----------------------------------------------------------------------------
 #IfWinActive Mozilla Firefox
-	!+3::SendInput ^l+3{Space}  ; every search term is part of title or tag
-	!+4::SendInput ^l+4{Space}  ; every search term is part of the URL
-	!+5::SendInput ^l+5{Space}  ; open tabs
-	!+6::SendInput ^l+6{Space}  ; history
-	!+8::SendInput ^l+8{Space}  ; bookmarks
-	!+=::SendInput ^l+={Space}  ; bookmarks with tags
-	!+?::
-		ToolTip,
-		( LTrim %
-			Autocomplete modifiers
-			~~~~~~~~~~~~~~~~
-			Title or tag`t3  # 
-			URL`t`t4  $ 
-			Open tabs`t5  % 
-			History`t`t6  ^ 
-			Bookmarks`t8   * 
-			Tags`t`t    +
-			Search suggestions     ?
-		)
-		Sleep 5000
-		ToolTip,,
-		Return
+    !+3::SendInput ^l+3{Space}  ; every search term is part of title or tag
+    !+4::SendInput ^l+4{Space}  ; every search term is part of the URL
+    !+5::SendInput ^l+5{Space}  ; open tabs
+    !+6::SendInput ^l+6{Space}  ; history
+    !+8::SendInput ^l+8{Space}  ; bookmarks
+    !+=::SendInput ^l+={Space}  ; bookmarks with tags
+    !+?::
+        ToolTip,
+        ( LTrim %
+            Autocomplete modifiers
+            ~~~~~~~~~~~~~~~~
+            Title or tag`t3  # 
+            URL`t`t4  $ 
+            Open tabs`t5  % 
+            History`t`t6  ^ 
+            Bookmarks`t8   * 
+            Tags`t`t    +
+            Search suggestions     ?
+        )
+        Sleep 5000
+        ToolTip,,
+        Return
