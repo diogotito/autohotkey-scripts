@@ -1,0 +1,3 @@
+[submodule "submodules/VirtualDesktopAccessor"]
+	path = submodules/VirtualDesktopAccessor
+	url = https://github.com/Ciantic/VirtualDesktopAccessor.git
