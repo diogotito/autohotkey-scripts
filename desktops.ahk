@@ -12,9 +12,8 @@ Zim_Launch()
 #Include Lib\Switch-Windows-same-App.ahk
 ; -----------------------------------------------------------------------------
 
-#z::Zim()
-
 ; == End of auto-execute section ==============================================
+
 
 ; -----------------------------------------------------------------------------
 ; Debugging aids
@@ -31,16 +30,25 @@ Zim_Launch()
 ; Enhanced Windows desktop workflows
 ; -----------------------------------------------------------------------------
 
+; More ergonomic window management
 #+Q::SendInput !{F4}
 
+; Frequently accessed settings
 #+O::Run SystemPropertiesAdvanced.exe
 
+; Virtual desktops (courtesy of Ciantic/VirtualDesktopAccessor)
 ^#!1::VD_GoToDesktopNumber(0)
 ^#!2::VD_GoToDesktopNumber(1)
 ^#!3::VD_GoToDesktopNumber(2)
 ^#!4::VD_GoToDesktopNumber(3)
 ^#!5::VD_GoToDesktopNumber(4)
 ^#!6::VD_GoToDesktopNumber(5)
+^#!7::VD_GoToDesktopNumber(6)
+^#!8::VD_GoToDesktopNumber(7)
+^#!9::VD_GoToDesktopNumber(8)
+^#!0::VD_GoToDesktopNumber(9)
+
+#z::Zim()
 
 ; -----------------------------------------------------------------------------
 ; I want to open a terminal with a hotkey
