@@ -7,6 +7,7 @@ SetTitleMatchMode 2  ; Match anywhere
 RunWaitOne_PrepareHiddenWindow()
 Zim_Launch()
 #Include Lib\VD.ahk
+#Include Lib\CycleOrLaunch.ahk
 #Include Lib\MonitorianKeys.ahk
 #Include Lib\PowerToysRunKeys.ahk
 #Include Lib\Switch-Windows-same-App.ahk
@@ -16,15 +17,16 @@ Zim_Launch()
 
 
 ; -----------------------------------------------------------------------------
-; Debugging aids
+; Development aids
 ; -----------------------------------------------------------------------------
 
 #+F5::
 	ToolTip % "============`n=   Reloading...   =`n============"
-	Sleep 500
+	Sleep 300
 	Reload
 	return
 
+^#!F5::Run, %A_ComSpec% /c "code %A_ScriptDir%"
 
 ; -----------------------------------------------------------------------------
 ; Enhanced Windows desktop workflows
@@ -40,6 +42,8 @@ Zim_Launch()
 #+O::Run SystemPropertiesAdvanced.exe
 
 ; Virtual desktops (courtesy of Ciantic/VirtualDesktopAccessor)
+#n::VD_GoToNextDesktop()
+#+n::VD_GoToPrevDesktop()
 ^#!1::VD_GoToDesktopNumber(0)
 ^#!2::VD_GoToDesktopNumber(1)
 ^#!3::VD_GoToDesktopNumber(2)
@@ -51,13 +55,13 @@ Zim_Launch()
 ^#!9::VD_GoToDesktopNumber(8)
 ^#!0::VD_GoToDesktopNumber(9)
 
-#z::Zim()
-
 ; -----------------------------------------------------------------------------
 ; I want to open a terminal with a hotkey
 ; -----------------------------------------------------------------------------
-#+Enter::Run, cmd.exe   ; Shows up instantly and doesnt't take 1 to 30 seconds to start up
-#Enter::CycleOrLaunch(
+#+Enter::CycleOrLaunch("CMD"
+	,"ahk_class ConsoleWindowClass"
+	,"cmd.exe")
+#Enter::CycleOrLaunch("WindowsTerminal"
 	,"ahk_class CASCADIA_HOSTING_WINDOW_CLASS ahk_exe WindowsTerminal.exe"
 	, "wt.exe")
 
@@ -72,8 +76,21 @@ Zim_Launch()
 ^#!M::Run C:\Users\diogotito\AppData\Local\Programs\caprine\Caprine.exe
 ^#!O::Run C:\Users\diogotito\AppData\Local\Obsidian\Obsidian.exe
 
+; -----------------------------------------------------------------------------
+; Workflows
+; -----------------------------------------------------------------------------
+
+; Help & Documentation windows
+^#!H::CycleOrLaunch("Docs"
+	, [ "DevDocs ahk_class Chrome_WidgetWin_1"
+	  , "ahk_class HH Parent" ]
+	, "")
+
+; Lib\Zim.ahk
+#z::Zim()
+
 ; VS Code window group
-^#!C::CycleOrLaunch(
+^#!C::CycleOrLaunch("VSCode"
 	,"Visual Studio Code"
 	, "
 ( LTrim Comments Join`s
@@ -86,7 +103,6 @@ Zim_Launch()
 ^#!F::CycleOrLaunch("BrowserWindows"
 	, "Mozilla Firefox ahk_class MozillaWindowClass"
 	, "C:\Program Files\Mozilla Firefox\firefox.exe")
-
 
 ; Open Bitwarden and click "Unlock with Windows Hello"
 ^#!B::
