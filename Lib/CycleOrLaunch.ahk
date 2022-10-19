@@ -1,4 +1,5 @@
 LAUNCH_TOOLTIP = 14
+GROUP_TOOLTIP = 15
 
 ; -----------------------------------------------------------------------------
 ; Switch to an app's window if it's running, otherwise launch it
@@ -12,6 +13,7 @@ CycleOrLaunch(group_name:="", win_criteria:="", launch_command:="") {
 	DetectHiddenWindows, On
 	GroupAdd, %group_name%, %win_criteria%,, % launch_command ? "no_match" : ""
 	GroupActivate, %group_name%, R
+	ShowGroupInTooltip(group_name)
 	Return
 
 	no_match:
@@ -33,4 +35,14 @@ GenerateGroupName() {
 		s .= Chr(r)
 	}
 	Return s
+}
+
+ShowGroupInTooltip(group_name) {
+	ToolTip, % "Windows in " SubStr(group_name, 3),,, GROUP_TOOLTIP
+	SetTimer, dismiss_tooltip, -1000
+	Return
+
+	dismiss_tooltip:
+		ToolTip,,,, GROUP_TOOLTIP
+		Return
 }
