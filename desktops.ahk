@@ -20,12 +20,14 @@ Zim_Launch()
 ; Development aids
 ; -----------------------------------------------------------------------------
 
+; Reload this hotkey with a keybinding -- Remeber to save first!
 #+F5::
 	ToolTip % "============`n=   Reloading...   =`n============"
 	Sleep 300
 	Reload
 	return
 
+; Quickly open this project in VS Code
 ^#!F5::Run, %A_ComSpec% /c "code %A_ScriptDir%"
 
 ; -----------------------------------------------------------------------------
@@ -44,23 +46,40 @@ Zim_Launch()
 ; Virtual desktops (courtesy of Ciantic/VirtualDesktopAccessor)
 #n::VD_GoToNextDesktop()
 #+n::VD_GoToPrevDesktop()
-^#!1::VD_GoToDesktopNumber(0)
-^#!2::VD_GoToDesktopNumber(1)
-^#!3::VD_GoToDesktopNumber(2)
-^#!4::VD_GoToDesktopNumber(3)
-^#!5::VD_GoToDesktopNumber(4)
-^#!6::VD_GoToDesktopNumber(5)
-^#!7::VD_GoToDesktopNumber(6)
-^#!8::VD_GoToDesktopNumber(7)
-^#!9::VD_GoToDesktopNumber(8)
-^#!0::VD_GoToDesktopNumber(9)
 
-; -----------------------------------------------------------------------------
+^#!1::
+^#!Numpad1::VD_GoToDesktopNumber(0)
+
+^#!2::
+^#!Numpad2::VD_GoToDesktopNumber(1)
+
+^#!3::
+^#!Numpad3::VD_GoToDesktopNumber(2)
+
+^#!4::
+^#!Numpad4::VD_GoToDesktopNumber(3)
+
+^#!5::
+^#!Numpad5::VD_GoToDesktopNumber(4)
+
+^#!6::
+^#!Numpad6::VD_GoToDesktopNumber(5)
+
+^#!7::
+^#!Numpad7::VD_GoToDesktopNumber(6)
+
+^#!8::
+^#!Numpad8::VD_GoToDesktopNumber(7)
+
+^#!9::
+^#!Numpad9::VD_GoToDesktopNumber(8)
+
+^#!0::
+^#!Numpad0::VD_GoToDesktopNumber(9)
+
+
 ; I want to open a terminal with a hotkey
-; -----------------------------------------------------------------------------
-#+Enter::CycleOrLaunch("CMD"
-	,"ahk_class ConsoleWindowClass"
-	,"cmd.exe")
+#+Enter::Run, CMD.EXE
 #Enter::CycleOrLaunch("WindowsTerminal"
 	,"ahk_class CASCADIA_HOSTING_WINDOW_CLASS ahk_exe WindowsTerminal.exe"
 	, "wt.exe")
@@ -69,7 +88,6 @@ Zim_Launch()
 ; -----------------------------------------------------------------------------
 ; Application shortcuts
 ; -----------------------------------------------------------------------------
-^#!S::Run subl
 ^#!T::Run C:\Users\diogotito\AppData\Roaming\Telegram Desktop\Telegram.exe
 ^#!P::Run C:\Users\diogotito\AppData\Local\SumatraPDF\SumatraPDF.exe
 ^#!L::Run C:\Program Files\texstudio\texstudio.exe
@@ -89,20 +107,27 @@ Zim_Launch()
 ; Lib\Zim.ahk
 #z::Zim()
 
-; VS Code window group
-^#!C::CycleOrLaunch("VSCode"
-	,"Visual Studio Code"
-	, "
-( LTrim Comments Join`s
-	""C:\Users\diogotito\AppData\Local\Programs\Microsoft VS Code\bin\code.cmd""
-	; Forces opening a file or folder in the last active window.
-	""--reuse-window""
-)")
+; Sublime text
+^#!S::CycleOrLaunch("SublimeText"
+	, " - Sublime Text ahk_class PX_WINDOW_CLASS ahk_exe sublime_text.exe"
+	, "subl")
 
-^#!+F::Run "C:\Program Files\Mozilla Firefox\firefox.exe"
+; VS Code window group  -- because this takes 1 sec: ^#!C::RunWaitOne("code -r")
+^#!C::CycleOrLaunch("VSCode"
+	, " - Visual Studio Code ahk_class Chrome_WidgetWin_1 ahk_exe Code.exe"
+	, """code"" --reuse-window")
+
 ^#!F::CycleOrLaunch("BrowserWindows"
 	, "Mozilla Firefox ahk_class MozillaWindowClass"
 	, "C:\Program Files\Mozilla Firefox\firefox.exe")
+^#!+F::Run "C:\Program Files\Mozilla Firefox\firefox.exe"
+
+^#!G::CycleOrLaunch("GitGUIs"
+	, [ "Git Gui ahk_class TkTopLevel ahk_exe wish.exe"
+	  , "gitk ahk_class TkTopLevel ahk_exe wish.exe"
+	  , "WinMerge ahk_class WinMergeWindowClassW"
+	  , "Fork ahk_class HwndWrapper[Fork.exe;; ahk_exe Fork.exe"])
+
 
 ; Open Bitwarden and click "Unlock with Windows Hello"
 ^#!B::
@@ -169,3 +194,4 @@ Zim_Launch()
 		)
 		Sleep 5000
 		ToolTip,,
+		Return
