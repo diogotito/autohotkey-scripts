@@ -8,12 +8,6 @@
 ; VD_MoveCurrentWindowToDesktop(num)
 ; ------------------------------------------------- ;
 
-
-
-DetectHiddenWindows, On
-hwnd:=WinExist("ahk_pid " . DllCall("GetCurrentProcessId","Uint"))
-hwnd+=0x1000<<32
-
 _VD_hVirtualDesktopAccessor := DllCall("LoadLibrary", Str, "submodules\VirtualDesktopAccessor\x64\Release\VirtualDesktopAccessor.dll", "Ptr") 
 _VD_GoToDesktopNumberProc := DllCall("GetProcAddress", Ptr, _VD_hVirtualDesktopAccessor, AStr, "GoToDesktopNumber", "Ptr")
 _VD_GetCurrentDesktopNumberProc := DllCall("GetProcAddress", Ptr, _VD_hVirtualDesktopAccessor, AStr, "GetCurrentDesktopNumber", "Ptr")
@@ -86,7 +80,7 @@ VD_GoToDesktopNumber(num) {
 }
 
 ; Windows 10 desktop changes listener
-DllCall(_VD_RegisterPostMessageHookProc, Int, hwnd, Int, 0x1400 + 30)
+DllCall(_VD_RegisterPostMessageHookProc, Int, A_ScriptHwnd, Int, 0x1400 + 30)
 OnMessage(0x1400 + 30, "VWMess")
 VWMess(wParam, lParam, msg, hwnd) {
 	global _VD_IsWindowOnCurrentVirtualDesktopProc, _VD_IsPinnedWindowProc, _VD_activeWindowByDesktop
@@ -102,6 +96,6 @@ VWMess(wParam, lParam, msg, hwnd) {
 		WinActivate, ahk_id %oldHwnd%
 	}
 
-	MsgBox,, VWMess 0x1400 + 30, Text, Icons/VD_%desktopNumber%.ico
-	Menu, Tray, Icon, Icons/VD_%desktopNumber%.ico
+	MsgBox,, VWMess 0x1400 + 30, %A_ScriptDir%`nIcons/VD_%desktopNumber%.ico
+	Menu, Tray, Icon, Icons\VD_%desktopNumber%.ico
 }
