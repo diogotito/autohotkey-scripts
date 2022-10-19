@@ -96,6 +96,6 @@ VWMess(wParam, lParam, msg, hwnd) {
 		WinActivate, ahk_id %oldHwnd%
 	}
 
-	MsgBox,, VWMess 0x1400 + 30, %A_ScriptDir%`nIcons/VD_%desktopNumber%.ico
-	Menu, Tray, Icon, Icons\VD_%desktopNumber%.ico
+	; MsgBox,, VWMess 0x1400 + 30, %A_ScriptDir%`nIcons\VD_%desktopNumber%.ico
+	; Menu, Tray, Icon, Icons\VD_%desktopNumber%.ico
 }
