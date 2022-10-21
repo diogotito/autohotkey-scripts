@@ -124,8 +124,13 @@ Zim_Launch()
 ; Help & Documentation windows
 ^#!H::CycleOrLaunch("Docs"
     , [ "DevDocs ahk_class Chrome_WidgetWin_1"
-      , "ahk_class HH Parent" ]
-    , "")
+      , "ahk_class HH Parent"
+      , "help ahk_class QWidget" ]
+    , Func("HellYeah").Bind("NOT THE DEFAULT MESSAGE !!"))
+
+HellYeah(msg:="DEFAULT!") {
+    MsgBox % msg
+}
 
 ; Lib\Zim.ahk
 #z::Zim()
