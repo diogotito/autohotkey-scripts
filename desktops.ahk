@@ -33,6 +33,12 @@ Zim_Launch()
 ; 2. Development aids
 ; -----------------------------------------------------------------------------
 
+; Exit the script
+#+F4::
+    ToolTip % "============`n=   EXITING...   =`n============"
+    Sleep 500
+    ExitApp
+
 ; Reload this hotkey with a keybinding -- Remeber to save first!
 #+F5::
     ToolTip % "============`n=   Reloading...   =`n============"
