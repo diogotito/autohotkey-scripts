@@ -199,6 +199,19 @@ HellYeah(msg:="DEFAULT!") {
 
 
 ; -----------------------------------------------------------------------------
+; Add a few force-of-habit convenience shortcuts to the 7-Zip File Manager
+; -----------------------------------------------------------------------------
+#IfWinActive ahk_class FM ahk_exe 7zFM.exe
+    ^B::Send {F9}  ; Toggle 2 panels
+    ^L::
+        ; Focus the "address bar" of the active pane
+        ControlGetFocus, focused_control
+        if RegExMatch(focused_control, "32\K[12]$" , one_or_two) {
+            ControlFocus, Edit%one_or_two%
+        }
+        Return
+
+; -----------------------------------------------------------------------------
 ; Ctrl+Tab to switch between the two MRU tabs in Microsoft Edge using QuicKey
 ; -----------------------------------------------------------------------------
 #IfWinActive ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
