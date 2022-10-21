@@ -93,7 +93,7 @@ VWMess(wParam, lParam, msg, hwnd) {
 	oldHwnd := _VD_activeWindowByDesktop[lParam]
 	isOnDesktop := DllCall(_VD_IsWindowOnCurrentVirtualDesktopProc, UInt, oldHwnd, Int)
 	if (isOnDesktop == 1 && isPinned != 1) {
-		WinActivate, ahk_id %oldHwnd%
+		; WinActivate, ahk_id %oldHwnd%
 	}
 
 	; MsgBox,, VWMess 0x1400 + 30, %A_ScriptDir%`nIcons\VD_%desktopNumber%.ico

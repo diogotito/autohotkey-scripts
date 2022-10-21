@@ -1,5 +1,6 @@
 ; -----------------------------------------------------------------------------
-; Monitor brightness through Monitorian
+; Hotkeys to change monitor brightness through Monitorian
+; Requires RunWaitOne_PrepareHiddenWindow() to have been run once
 ; -----------------------------------------------------------------------------
 #+NumpadAdd::
 	Run, Monitorian.exe /set all +15

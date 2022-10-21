@@ -156,11 +156,13 @@ HellYeah(msg:="DEFAULT!") {
     , " - Visual Studio Code ahk_class Chrome_WidgetWin_1 ahk_exe Code.exe"
     , """code"" --reuse-window")
 
+; Firefox, Chrome, Edge, etc.
 ^#!F::CycleOrLaunch("BrowserWindows"
     , "Mozilla Firefox ahk_class MozillaWindowClass"
     , "C:\Program Files\Mozilla Firefox\firefox.exe")
 ^#!+F::Run "C:\Program Files\Mozilla Firefox\firefox.exe"
 
+; Git GUI, gitk, Fork, SourceTree, WinMerge, you name it
 ^#!G::CycleOrLaunch("GitGUIs"
     , [ "Git Gui ahk_class TkTopLevel ahk_exe wish.exe"
       , "gitk ahk_class TkTopLevel ahk_exe wish.exe"
