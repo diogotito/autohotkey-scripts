@@ -2,7 +2,7 @@ Some AutoHotKey scripts
 =======================
 
 <img
-  style="float: right"
+  align="right"
   src="Icons/tray_screenshot.png"
   alt="Screenshot showcasing the tray icon" ></img>
 
