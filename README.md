@@ -24,7 +24,7 @@ to go to the next / previous desktop
 - Bind <kbd>Ctrl</kbd><kbd>&#x229e;</kbd><kbd>Alt</kbd> <kbd><i>N</i></kbd>
 to switch to the <i>N</i>-th desktop
 - A few hotkeys to launch applications
-- Many hotkeys that either [launch, switch to, or cycle](Lib\CycleOrLaunch.ahk)
+- Many hotkeys that either [launch, switch to, or cycle](Lib/CycleOrLaunch.ahk)
 through windows of an application (one hotkey for each application)
 that begin with <kbd>Ctrl</kbd><kbd>&#x229e;</kbd><kbd>Alt</kbd>
 
