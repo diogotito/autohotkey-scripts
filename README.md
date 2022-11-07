@@ -5,7 +5,7 @@ Been learning AutoHotKey v1.1 a bit more in depth but I plan to migrate my scrip
 to v2 because I'm excited about the evolution that's happening to the languge
 there!
 
-The relevant files here are:
+The relevant files are:
 
 - `desktops.ahk` -  the "entry point" that has most of my hotkeys and `#Include`s
 the rest of the relevant files, which are mostly in...
@@ -14,14 +14,14 @@ the rest of the relevant files, which are mostly in...
 I created a shortcut to `desktops.ahk` in my Startup foler
 (<kbd>⊞ Win</kbd> <kbd>R</kbd> `shell:startup` <kbd>&#x23ce;</kbd>)
 
-Functionality
--------------
+Features
+--------
 
-- Bound <kbd>&#x21d1;</kbd><kbd>&#x229e;</kbd> <kbd>Q</kbd>
+- Bind <kbd>&#x21d1;</kbd><kbd>&#x229e;</kbd> <kbd>Q</kbd>
 to <kbd>Alt</kbd> <kbd>F4</kbd> to close windows more ergonomically
-- Bound <kbd>&#x229e;</kbd> <kbd>N</kbd> / <kbd>&#x229e;</kbd> <kbd>N</kbd>
+- Bind <kbd>&#x229e;</kbd> <kbd>N</kbd> / <kbd>&#x229e;</kbd> <kbd>N</kbd>
 to go to the next / previous desktop
-- Bound <kbd>Ctrl</kbd><kbd>&#x229e;</kbd><kbd>Alt</kbd> <kbd><i>N</i></kbd>
+- Bind <kbd>Ctrl</kbd><kbd>&#x229e;</kbd><kbd>Alt</kbd> <kbd><i>N</i></kbd>
 to switch to the <i>N</i>-th desktop
 - A few hotkeys to launch applications
 - Many hotkeys that either [launch, switch to, or cycle](Lib\CycleOrLaunch.ahk)
