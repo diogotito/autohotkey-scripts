@@ -242,14 +242,28 @@ HellYeah(msg:="DEFAULT!") {
         ( LTrim %
             Autocomplete modifiers
             ~~~~~~~~~~~~~~~~
-            Title or tag`t3  # 
-            URL`t`t4  $ 
-            Open tabs`t5  % 
-            History`t`t6  ^ 
-            Bookmarks`t8   * 
+            Title or tag`t3  #
+            URL`t`t4  $
+            Open tabs`t5  %
+            History`t`t6  ^
+            Bookmarks`t8   *
             Tags`t`t    +
             Search suggestions     ?
         )
         Sleep 5000
         ToolTip,,
         Return
+    
+    ; Activate context menu entries with {Space}
+    ~Space::
+        MouseGetPos,,, m_win_id, m_ctl
+        WinGetClass m_winclass, ahk_id %m_win_id%
+        if (m_winclass = "MozillaDropShadowWindowClass") {
+            SendInput {Enter}
+        }
+        Return
+    
+    ; :imap jk <Esc> in Vim modes
+    !+V::SendEvent {Esc}:imap jk <C-[>{Enter}
+
+#IfWinActive
