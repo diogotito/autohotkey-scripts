@@ -26,23 +26,29 @@ CycleOrLaunch(group_name:="", win_criteria:="", launch_command:="") {
     _COL_SetupGroup(group_name, win_criteria, launch_command)
 
     ; Try to activate the group now
-    ; This will `GoSub when_no_match` if this group doesn't match any window
+    ; This will `GoSub when_no_match` if we can't change to another window
     DetectHiddenWindows, On
     GroupActivate, %group_name%, R
 
     ; Show which windows match this group if there are any
     if (ErrorLevel != 1) {
+        WinShow
         _COL_ShowGroupInTooltip(group_name)
     }
     Return
 
     when_no_match:
-        ; TODO Isn't this loop redundant?
-        For i, criteria in win_criteria {
-            if WinActive(criteria) {
-                Return
-            }
+        ; Edge case: The group matches 1 window but it's currently active,
+        ; so GroupActivate "fails" and GoSubs here. This ignores that case:
+        if WinActive("ahk_group " group_name) {
+            Return
         }
+
+        ; Notify that the launch is happening...
+        ToolTip, % Format("~~ {} ~~`nLaunching {}:`n{}"
+            , A_ThisHotkey, SubStr(group_name, 3)
+            , IsObject(launch_command) ? "f()"Chr(8230) : "> " launch_command)
+            ,,, %_TOOLTIP_LAUNCH%
 
         ; Do the actual launching
         if IsObject(launch_command) {
@@ -51,12 +57,10 @@ CycleOrLaunch(group_name:="", win_criteria:="", launch_command:="") {
             Run % launch_command
         }
 
-        ; Notify that the launch is happening...
-        ToolTip, ~~ Launching ~~`n%launch_command%,,, %_TOOLTIP_LAUNCH%
-        WinWait % win_criteria[1],, 5
+        ; Wait until the launch is done to dismiss the tooltip
+        WinWait ahk_group %group_name%,, 5
         if not ErrorLevel {
-            ; Success! Switch to the newly launched app right away!
-            WinActivate % win_criteria[1]
+            WinActivate
         } else {
             ToolTip, !! Timeout: 5 seconds !!,,, %_TOOLTIP_LAUNCH%
             Sleep, 1000
@@ -65,7 +69,7 @@ CycleOrLaunch(group_name:="", win_criteria:="", launch_command:="") {
         Return
 }
 
-; -----------------------------------------------------------------------------
+; -- auxiliary functions ------------------------------------------------------
 
 _COL_uniformalize_args(ByRef group_name, ByRef win_criteria) {
     if not group_name {
@@ -101,10 +105,6 @@ _COL_SetupGroup(group_name, win_criteria, launch_command) {
     Return group_name
 }
 
-; -----------------------------------------------------------------------------
-; Utilities
-; -----------------------------------------------------------------------------
-
 _COL_GenerateGroupName() {
     Loop, 10 {
         Random, r, 65, 90  ; A-Z
@@ -127,6 +127,7 @@ _COL_Flatten(criteria_array) {
 _COL_ShowGroupInTooltip(group_name) {
     windows_in_group := _COL_GetWindowsInGroup(group_name)
     if windows_in_group.Count() = 1 {
+        ToolTip,,,, %_TOOLTIP_GROUP%
         Return
     }
     text := "----- " SubStr(group_name, 3) " -----"
@@ -138,15 +139,27 @@ _COL_ShowGroupInTooltip(group_name) {
     }
 
     ToolTip, %text%,,, %_TOOLTIP_GROUP%
-    SetTimer, dismiss_group_tooltip, -1000
+
+    ; Dismiss the tooltip when all the modifier keys are released
+    ; Poll every 100 ms in a different thread to free the current hotkey
+    SetTimer, check_modifiers, 100
     Return
 
-    dismiss_group_tooltip:
-        ToolTip,,,, %_TOOLTIP_GROUP%
+    check_modifiers:
+        if not (GetKeyState("Ctrl", "P")
+            || GetKeyState("LWin", "P")
+            || GetKeyState("RWin", "P")
+            || GetKeyState("Alt", "P"))
+        {
+            SetTimer,, Off
+            ToolTip,,,, %_TOOLTIP_GROUP%
+        }
         Return
 }
 
 _COL_GetWindowsInGroup(group_name) {
+    ; Retrieve some info on windows matching a group and wrap that in a nice
+    ; array of objects
     Array := []
     WinGet, pseudo_array, List, ahk_group %group_name%
     Loop, %pseudo_array% {
