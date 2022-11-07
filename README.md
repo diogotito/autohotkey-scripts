@@ -90,7 +90,7 @@ using a small variety of methods:
   3. If it isn't running, launch it again.
   4. If the window is focused, minimize it.
 
-### Thanks
+### Acknowledgments
 
 [VirtualDesktopAccessor](https://github.com/Ciantic/VirtualDesktopAccessor)
 for providing a DLL to simplify use of Virtual Desktop APIs and sample AHK code
