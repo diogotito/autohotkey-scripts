@@ -15,6 +15,9 @@
 #SingleInstance force
 SetTitleMatchMode 2  ; Match anywhere
 
+; This is a 16x16 pixel-art keyboard icon drawn by TOMAZ-DIONISIO  
+Menu Tray, Icon, Icons\KEYBOARD.ico
+
 ; -----------------------------------------------------------------------------
 ; 1. Local library
 ; -----------------------------------------------------------------------------
