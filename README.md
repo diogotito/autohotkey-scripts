@@ -1,6 +1,11 @@
 Some AutoHotKey scripts
 =======================
 
+<img
+  style="float: right"
+  src="Icons/tray_screenshot.png"
+  alt="Screenshot showcasing the tray icon" ></img>
+
 Been learning AutoHotKey v1.1 a bit more in depth but I plan to migrate my scripts
 to v2 because I'm excited about the evolution that's happening to the languge
 there!
