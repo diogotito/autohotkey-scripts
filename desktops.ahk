@@ -59,8 +59,38 @@ Zim_Launch()
 ; Cycle between File Explorer windows
 ^#!X::CycleOrLaunch("FileExplorer", "ahk_class CabinetWClass", "explorer.exe")
 
-; Frequently accessed settings
+; Get to the %PATH% quicker
 #+O::Run SystemPropertiesAdvanced.exe
+
+; Cybernetically enhanced charmap.exe
+#C::
+    CycleOrLaunch("charmap", "Character Map ahk_exe charmap.exe", "charmap.exe")
+    WinShow Character Map ahk_exe charmap.exe
+    ControlFocus, Edit2, Character Map ahk_exe charmap.exe
+    Return
+
+#IfWinActive Character Map ahk_exe charmap.exe
+    ^F::ControlFocus Edit2
+    ^H::ControlSend RICHEDIT50W1, {BackSpace}
+    ^BackSpace::Send ^+{Left}{BackSpace}
+    Esc::WinHide
+    
+    ; Control the character grid, Vim-style
+    !h::ControlSend CharGridWClass1, {Left}
+    !j::ControlSend CharGridWClass1, {Down}
+    !k::ControlSend CharGridWClass1, {Up}
+    !l::ControlSend CharGridWClass1, {Right}
+
+    ; Quickly copy the highlighted character in the grid and hide Character Map
+    ^C::
+        SetControlDelay 300
+        ControlSetText RICHEDIT50W1, % ""
+        ControlClick Button1
+        ControlClick Button2
+        WinHide
+        Return
+#IfWinActive
+
 
 ; I want to open a terminal with a hotkey
 #+Enter::Run, CMD.EXE
