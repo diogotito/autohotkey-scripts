@@ -19,7 +19,7 @@ Features
 
 - Bind <kbd>&#x21d1;</kbd><kbd>&#x229e;</kbd> <kbd>Q</kbd>
 to <kbd>Alt</kbd> <kbd>F4</kbd> to close windows more ergonomically
-- Bind <kbd>&#x229e;</kbd> <kbd>N</kbd> / <kbd>&#x229e;</kbd> <kbd>N</kbd>
+- Bind <kbd>&#x229e;</kbd> <kbd>N</kbd> / <kbd>&#x21d1;</kbd><kbd>&#x229e;</kbd> <kbd>N</kbd>
 to go to the next / previous desktop
 - Bind <kbd>Ctrl</kbd><kbd>&#x229e;</kbd><kbd>Alt</kbd> <kbd><i>N</i></kbd>
 to switch to the <i>N</i>-th desktop
