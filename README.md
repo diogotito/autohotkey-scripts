@@ -72,8 +72,14 @@ to focus the address bar and type the corresponding symbol to
 <kbd>&#x21d1;</kbd><kbd>Alt</kbd> + <kbd>?</kbd>
 brings up a quick reference in a tooltip.
 
+- **[PowerToys Run](https://learn.microsoft.com/en-us/windows/powertoys/run)**,
+from [Microsoft PowerToys](https://learn.microsoft.com/en-us/windows/powertoys/),
+gets some Readline-inspired keybindings for its input field.
+In other words: the cursor operates more like the one on a Linux/BSD/macOS
+command line or macOS's native text fields _(I really envy those!)_.
+
 - I like to take my notes in **[Zim](https://zim-wiki.org/)**,
-but it's a Python + GTK app that's too slow to start up on Windows for me,
+but it's a Python+GTK app that's too slow to start up on Windows for me,
 so I enabled the Tray Icon plugin and made it automatically start up to the
 tray.
 Then I bound <kbd>&#x229e;</kbd> <kbd>Z</kbd> to quickly bring up a Zim window
@@ -109,8 +115,6 @@ brightness.
 - [Microsoft PowerToys](https://learn.microsoft.com/en-us/windows/powertoys/).
 The things I use the most are:
   - PowerToys Run
-    - The `desktops.ahk` script augments the input field with some
-    Readline (Emacs)-style keybindings.
   - Additional File Explorer preview handlers (see also: [QuickLook](https://github.com/QL-Win/QuickLook)).
   - Always On Top,
   Awake,
