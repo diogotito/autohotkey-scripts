@@ -154,7 +154,7 @@ HellYeah(msg:="DEFAULT!") {
 ; VS Code window group  -- because ^#!C::RunWaitOne("code -r") is a bit slow
 ^#!C::CycleOrLaunch("VSCode"
     , " - Visual Studio Code ahk_class Chrome_WidgetWin_1 ahk_exe Code.exe"
-    , """code"" --reuse-window")
+    , Func("RunWaitOne").Bind("""code"" --reuse-window"))
 
 ; Firefox, Chrome, Edge, etc.
 ^#!F::CycleOrLaunch("BrowserWindows"
