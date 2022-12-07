@@ -31,6 +31,48 @@ Zim_Launch()
 #Include Lib\Switch-Windows-same-App.ahk
 ; -----------------------------------------------------------------------------
 
+; 1.5. staging
+LogToolTip(newText := "") {
+    static text := ""
+    if (newText) {
+        text .= newText
+        ToolTip % text, 0, 0
+    } else {
+        text := ""
+        ToolTip,,
+    }
+}
+
+#q::
+    qrencode() {
+        qrencode = C:\tools\msys64\mingw64\bin\qrencode.exe
+        image = %A_Temp%\qrencode.png
+
+        if not Clipboard {
+            ToolTip Não há texto no Clipboard
+            Sleep 1000
+            ToolTip,,
+            Return
+        }
+
+        try {
+            LogToolTip("> a correr qrencode:`n" qrencode "`nClipboard = " Clipboard)
+            RunWait %qrencode% "%Clipboard%" -s 20 -o %image%,, UseErrorLevel
+            LogToolTip("`n-----`n")
+            Sleep 200
+            LogToolTip("> a lancar o visualizador de imagens:`n" image)
+            Run %image%,, UseErrorLevel
+            LogToolTip("`n-----`n")
+            Sleep 2000
+            LogToolTip("> a apagar a imagem")
+            FileDelete %image%
+            LogToolTip()
+        } catch e {
+            MsgBox Houve um erro!`nSpecifically: %e%`nA_LastError = %A_LastError%
+        } finally {
+            LogToolTip()
+        }
+    }
 
 ; -----------------------------------------------------------------------------
 ; 2. Development aids
