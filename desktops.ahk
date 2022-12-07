@@ -101,6 +101,30 @@ Zim_Launch()
     ,"ahk_class CASCADIA_HOSTING_WINDOW_CLASS ahk_exe WindowsTerminal.exe"
     , "wt.exe")
 
+; File Explorer enhancements
+InputFocusIn(control, win_title) {
+    ControlGetFocus focused_control, %win_title%
+    Return focused_control == control
+}
+
+#IfWinActive ahk_class CabinetWClass ahk_exe explorer.exe
+    !+C::SendInput ^l^aC:\
+    !+D::SendInput ^l^aD:\
+    !+E::SendInput ^l^aE:\{Enter}
+    !+F::SendInput ^l^aF:\{Enter}
+    !+T::SendInput ^l^aT:\
+    !+S::SendInput ^l^asubl -d .{Enter}   ; Open Sublime Text here
+    !+V::SendInput ^l^acode .{Enter}      ; Open VS Code here
+    !+V::SendInput ^l^awt nt -d .{Enter}  ; Open Windows Terminal here
+    !+N::SendInput ^l^aserve.cmd .{Enter} ; Run a dev. static file server here
+    ^Tab::GroupActivate G_FileExplorer, R
+    +^Tab::GroupActivate G_FileExplorer
+#If InputFocusIn("Edit1", "ahk_class CabinetWClass ahk_exe explorer.exe")
+    /::\
+    Tab::Down
+    +Tab::Up
+#If
+
 ; Virtual desktops (courtesy of Ciantic/VirtualDesktopAccessor)
 ; BTW https://github.com/Grabacr07/SylphyHorn goes well with this
 ; I use it to:
