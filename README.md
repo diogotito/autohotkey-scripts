@@ -18,7 +18,7 @@ The relevant files are:
 the rest of the relevant files, which are mostly in...
 - `Lib/` – the [local library of functions](https://www.autohotkey.com/docs/Functions.htm#lib)
 
-I created a shortcut to `desktops.ahk` in my Startup foler
+I created a shortcut to `desktops.ahk` in my Startup folder
 (<kbd>⊞ Win</kbd> <kbd>R</kbd> `shell:startup` <kbd>&#x23ce;</kbd>)
 
 Features
