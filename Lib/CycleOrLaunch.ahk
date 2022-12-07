@@ -26,7 +26,9 @@ CycleOrLaunch(group_name:="", win_criteria:="", launch_command:="") {
     _COL_SetupGroup(group_name, win_criteria, launch_command)
 
     ; Try to activate the group now
-    ; This will `GoSub when_no_match` if we can't change to another window
+    ; This will `GoSub when_no_match` if there isn't any window
+    ; (other than the currently active one!)
+    ; that matches the group and a launch_command was provided
     DetectHiddenWindows, On
     GroupActivate, %group_name%, R
 
@@ -41,6 +43,7 @@ CycleOrLaunch(group_name:="", win_criteria:="", launch_command:="") {
         ; Edge case: The group matches 1 window but it's currently active,
         ; so GroupActivate "fails" and GoSubs here. This ignores that case:
         if WinActive("ahk_group " group_name) {
+            _COL_Blink()
             Return
         }
 
@@ -81,11 +84,10 @@ _COL_uniformalize_args(ByRef group_name, ByRef win_criteria) {
 
 _COL_SetupGroup(group_name, win_criteria, launch_command) {
     ; Cache group names to repeat redundant GroupAdds
+    ; (although AHK already does this itself in WinGroup.cpp#L48-L57)
     static memo := {}
     memo_key := _COL_Flatten(win_criteria)
     If memo.HasKey(memo_key) {
-        ; MsgBox, % "Memo: memo[" win_criteria "] = " memo[win_criteria]
-        ; No need to GroupAdd again -- it would be ignored anyways
         Return memo[memo_key]
     }
     memo[memo_key] := group_name
@@ -123,6 +125,12 @@ _COL_Flatten(criteria_array) {
 ; -----------------------------------------------------------------------------
 ; Gratuitous bling
 ; -----------------------------------------------------------------------------
+
+_COL_Blink() {
+    Winset Transparent, 192, A
+    Sleep 75
+    Winset Transparent, 255, A
+}
 
 _COL_ShowGroupInTooltip(group_name) {
     windows_in_group := _COL_GetWindowsInGroup(group_name)
