@@ -13,9 +13,9 @@
 ; =============================================================================
 
 #SingleInstance force
-SetTitleMatchMode 2  ; Match anywhere
+SetTitleMatchMode 2 ; Match anywhere
 
-; This is a 16x16 pixel-art keyboard icon drawn by TOMAZ-DIONISIO  
+; This is a 16x16 pixel-art keyboard icon drawn by TOMAZ-DIONISIO
 Menu Tray, Icon, Icons\KEYBOARD.ico
 
 ; -----------------------------------------------------------------------------
@@ -80,16 +80,16 @@ LogToolTip(newText := "") {
 
 ; Exit the script
 #+F4::
-    ToolTip % "============`n=   EXITING...   =`n============"
+    ToolTip % "============`n= EXITING... =`n============"
     Sleep 500
-    ExitApp
+ExitApp
 
 ; Reload this hotkey with a keybinding -- Remeber to save first!
 #+F5::
-    ToolTip % "============`n=   Reloading...   =`n============"
+    ToolTip % "============`n= Reloading... =`n============"
     Sleep 300
     Reload
-    return
+return
 
 ; Quickly open this project in VS Code
 ^#!F5::Run, %A_ComSpec% /c "code %A_ScriptDir%"
@@ -112,14 +112,14 @@ LogToolTip(newText := "") {
     CycleOrLaunch("charmap", "Character Map ahk_exe charmap.exe", "charmap.exe")
     WinShow Character Map ahk_exe charmap.exe
     ControlFocus, Edit2, Character Map ahk_exe charmap.exe
-    Return
+Return
 
 #IfWinActive Character Map ahk_exe charmap.exe
     ^F::ControlFocus Edit2
     ^H::ControlSend RICHEDIT50W1, {BackSpace}
     ^BackSpace::Send ^+{Left}{BackSpace}
     Esc::WinHide
-    
+
     ; Control the character grid, Vim-style
     !h::ControlSend CharGridWClass1, {Left}
     !j::ControlSend CharGridWClass1, {Down}
@@ -128,14 +128,13 @@ LogToolTip(newText := "") {
 
     ; Quickly copy the highlighted character in the grid and hide Character Map
     ^C::
-        SetControlDelay 300
+        SetControlDelay 100
         ControlSetText RICHEDIT50W1, % ""
         ControlClick Button1
         ControlClick Button2
         WinHide
-        Return
+    Return
 #IfWinActive
-
 
 ; I want to open a terminal with a hotkey
 #+Enter::Run, CMD.EXE
@@ -155,9 +154,9 @@ InputFocusIn(control, win_title) {
     !+E::SendInput ^l^aE:\{Enter}
     !+F::SendInput ^l^aF:\{Enter}
     !+T::SendInput ^l^aT:\
-    !+S::SendInput ^l^asubl -d .{Enter}   ; Open Sublime Text here
-    !+V::SendInput ^l^acode .{Enter}      ; Open VS Code here
-    !+V::SendInput ^l^awt nt -d .{Enter}  ; Open Windows Terminal here
+    !+S::SendInput ^l^asubl -d .{Enter} ; Open Sublime Text here
+    !+V::SendInput ^l^acode .{Enter} ; Open VS Code here
+    !+V::SendInput ^l^awt nt -d .{Enter} ; Open Windows Terminal here
     !+N::SendInput ^l^aserve.cmd .{Enter} ; Run a dev. static file server here
     ^Tab::GroupActivate G_FileExplorer, R
     +^Tab::GroupActivate G_FileExplorer
@@ -176,35 +175,54 @@ InputFocusIn(control, win_title) {
 #+n::VD_GoToPrevDesktop()
 
 ^#!1::
-^#!Numpad1::VD_GoToDesktopNumber(0)
+^#!Numpad1::
+    VD_GoToDesktopNumber(0)
+Return
 
 ^#!2::
-^#!Numpad2::VD_GoToDesktopNumber(1)
+^#!Numpad2::
+    VD_GoToDesktopNumber(1)
+Return
 
 ^#!3::
-^#!Numpad3::VD_GoToDesktopNumber(2)
+^#!Numpad3::
+    VD_GoToDesktopNumber(2)
+Return
 
 ^#!4::
-^#!Numpad4::VD_GoToDesktopNumber(3)
+^#!Numpad4::
+    VD_GoToDesktopNumber(3)
+Return
 
 ^#!5::
-^#!Numpad5::VD_GoToDesktopNumber(4)
+^#!Numpad5::
+    VD_GoToDesktopNumber(4)
+Return
 
 ^#!6::
-^#!Numpad6::VD_GoToDesktopNumber(5)
+^#!Numpad6::
+    VD_GoToDesktopNumber(5)
+Return
 
 ^#!7::
-^#!Numpad7::VD_GoToDesktopNumber(6)
+^#!Numpad7::
+    VD_GoToDesktopNumber(6)
+Return
 
 ^#!8::
-^#!Numpad8::VD_GoToDesktopNumber(7)
+^#!Numpad8::
+    VD_GoToDesktopNumber(7)
+Return
 
 ^#!9::
-^#!Numpad9::VD_GoToDesktopNumber(8)
+^#!Numpad9::
+    VD_GoToDesktopNumber(8)
+Return
 
 ^#!0::
-^#!Numpad0::VD_GoToDesktopNumber(9)
-
+^#!Numpad0::
+    VD_GoToDesktopNumber(9)
+Return
 
 ; -----------------------------------------------------------------------------
 ; 4. Hotstrings
@@ -220,7 +238,6 @@ InputFocusIn(control, win_title) {
 ^#!P::Run C:\Users\diogotito\AppData\Local\SumatraPDF\SumatraPDF.exe
 ^#!L::Run C:\Program Files\texstudio\texstudio.exe
 ^#!M::Run C:\Users\diogotito\AppData\Local\Programs\caprine\Caprine.exe
-^#!O::Run C:\Users\diogotito\AppData\Local\Obsidian\Obsidian.exe
 
 ; -----------------------------------------------------------------------------
 ; 6. Hotkeys to cycle between window groups -- see Lib\CycleOrLaunch.ahk
@@ -229,8 +246,8 @@ InputFocusIn(control, win_title) {
 ; Help & Documentation windows
 ^#!H::CycleOrLaunch("Docs"
     , [ "DevDocs ahk_class Chrome_WidgetWin_1"
-      , "ahk_class HH Parent"
-      , "help ahk_class QWidget" ]
+    , "ahk_class HH Parent"
+    , "help ahk_class QWidget" ]
     , Func("HellYeah").Bind("NOT THE DEFAULT MESSAGE !!"))
 
 HellYeah(msg:="DEFAULT!") {
@@ -244,6 +261,11 @@ HellYeah(msg:="DEFAULT!") {
 ^#!Z::CycleOrLaunch("7zFM"
     , "ahk_class FM ahk_exe 7zFM.exe"
     , """C:\Program Files\7-Zip\7zFM.exe""")
+
+; Obsidian
+^#!O::CycleOrLaunch("Obsidian"
+    , "ahk_class Chrome_WidgetWin_1 ahk_exe Obsidian.exe"
+    , """C:\Users\diogotito\AppData\Local\Obsbsidian.exe""")
 
 ; Sublime text
 ^#!S::CycleOrLaunch("SublimeText"
@@ -264,10 +286,9 @@ HellYeah(msg:="DEFAULT!") {
 ; Git GUI, gitk, Fork, SourceTree, WinMerge, you name it
 ^#!G::CycleOrLaunch("GitGUIs"
     , [ "Git Gui ahk_class TkTopLevel ahk_exe wish.exe"
-      , "gitk ahk_class TkTopLevel ahk_exe wish.exe"
-      , "WinMerge ahk_class WinMergeWindowClassW"
-      , "Fork ahk_class HwndWrapper[Fork.exe;; ahk_exe Fork.exe"])
-
+    , "gitk ahk_class TkTopLevel ahk_exe wish.exe"
+    , "WinMerge ahk_class WinMergeWindowClassW"
+    , "ahk_exe Fork.exe"])
 
 ; -----------------------------------------------------------------------------
 ; 7. Misc hotkeys
@@ -282,33 +303,32 @@ HellYeah(msg:="DEFAULT!") {
 
         WinWait %CRITERIA%
         WinGetPos X, Y, Width, Height
-        btn_x := X + Width  / 2 + 65
+        btn_x := X + Width / 2 + 65
         btn_y := Y + Height / 2 + 145
         DllCall("SetCursorPos", "int", btn_x, "int", btn_y)
         MouseClick
     }
 
 #IfWinActive Defold Editor
-    F5::
-        SendInput, ^s^b
-        ToolTip, F5 >>> Ctrl + B`nBuild Project
-        Sleep 500
-        ToolTip,,
-        return
-
+F5::
+    SendInput, ^s^b
+    ToolTip, F5 >>> Ctrl + B`nBuild Project
+    Sleep 500
+    ToolTip,,
+return
 
 ; -----------------------------------------------------------------------------
 ; Add a few force-of-habit convenience shortcuts to the 7-Zip File Manager
 ; -----------------------------------------------------------------------------
 #IfWinActive ahk_class FM ahk_exe 7zFM.exe
-    ^B::Send {F9}  ; Toggle 2 panels
+    ^B::Send {F9} ; Toggle 2 panels
     ^L::
         ; Focus the "address bar" of the active pane
         ControlGetFocus, focused_control
         if RegExMatch(focused_control, "32\K[12]$" , one_or_two) {
             ControlFocus, Edit%one_or_two%
         }
-        Return
+    Return
 
 ; -----------------------------------------------------------------------------
 ; Ctrl+Tab to switch between the two MRU tabs in Microsoft Edge using QuicKey
@@ -317,7 +337,6 @@ HellYeah(msg:="DEFAULT!") {
     ^Tab::SendInput !z
     ^+Tab::SendInput !q
 
-
 ; -----------------------------------------------------------------------------
 ; TeXstudio (MRU)
 ; -----------------------------------------------------------------------------
@@ -325,22 +344,23 @@ HellYeah(msg:="DEFAULT!") {
     ^Tab::SendInput ^o{Enter}
     ^+Tab::SendInput ^o{Enter}
 
-
 ; -----------------------------------------------------------------------------
 ; Firefox's Awesome Bar shortcuts
 ; -----------------------------------------------------------------------------
 #IfWinActive Mozilla Firefox
-    !+3::SendInput ^l+3{Space}  ; every search term is part of title or tag
-    !+4::SendInput ^l+4{Space}  ; every search term is part of the URL
-    !+5::SendInput ^l+5{Space}  ; open tabs
-    !+6::SendInput ^l+6{Space}  ; history
-    !+8::SendInput ^l+8{Space}  ; bookmarks
-    !+=::SendInput ^l+={Space}  ; bookmarks with tags
+    !+2::SendInput ^l+2 ; search engines
+    !+3::SendInput ^l+3{Space} ; every search term is part of title or tag
+    !+4::SendInput ^l+4{Space} ; every search term is part of the URL
+    !+5::SendInput ^l+5{Space} ; open tabs
+    !+6::SendInput ^l+6{Space} ; history
+    !+8::SendInput ^l+8{Space} ; bookmarks
+    !+=::SendInput ^l+={Space} ; bookmarks with tags
     !+?::
         ToolTip,
         ( LTrim %
             Autocomplete modifiers
             ~~~~~~~~~~~~~~~~
+            Search Engines`t2  @
             Title or tag`t3  #
             URL`t`t4  $
             Open tabs`t5  %
@@ -351,8 +371,11 @@ HellYeah(msg:="DEFAULT!") {
         )
         Sleep 5000
         ToolTip,,
-        Return
-    
+    Return
+
+    ; macOS-style Preferences shortcut
+    ^,::SendInput ^labout:preferences!{Enter}
+
     ; Activate context menu entries with {Space}
     ~Space::
         MouseGetPos,,, m_win_id, m_ctl
@@ -360,8 +383,8 @@ HellYeah(msg:="DEFAULT!") {
         if (m_winclass = "MozillaDropShadowWindowClass") {
             SendInput {Enter}
         }
-        Return
-    
+    Return
+
     ; :imap jk <Esc> in Vim modes
     !+V::SendEvent {Esc}:imap jk <C-[>{Enter}
 

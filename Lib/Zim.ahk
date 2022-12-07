@@ -1,5 +1,5 @@
 Zim_Executable() {
-    return """C:\tools\zim\zim-0_75\zim.exe"""
+    return """C:\tools\zim\zim-0_75_1\zim.exe"""
 }
 
 Zim_Criteria() {
