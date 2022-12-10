@@ -1,28 +1,28 @@
-; =============================================================================
+;==============================================================================
 ; CycleOrLaunch(group_name:="", win_criteria:=[""], launch_command:="")
 ; Switch to an app's window if it's running, otherwise launch it
-; -----------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ; Actually, AHK already of does most of this out of the box!!
-; I could just call GroupAdd to setup all the groups, all at once, in the 
+; I could just call GroupAdd to setup all the groups, all at once, in the
 ; auto-execute section, and then write hotkeys to GroupActivate them.
 ; The annoying thing is that as soon as a hotkey is declared, the auto-execute
 ; section ends, and GroupAdd simply doesn't run anymore, so I can't configure
 ; my window groups near the hotkeys that use them!
 ; All this file does is build a sort of more declarative API so that I can
 ; write group criteria right under the hotkeys that activate it.
-; -----------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ; Ugh... This ended up taking too many hours for what it is.
 ; At least it was a good exercise in AHK and setting up VS Code to debug this.
-; =============================================================================
+;==============================================================================
 
 global _TOOLTIP_LAUNCH = 14
 global _TOOLTIP_GROUP = 15
 
-; -----------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ; Entry point
-; -----------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 CycleOrLaunch(group_name:="", win_criteria:="", launch_command:="") {
-    _COL_uniformalize_args(group_name, win_criteria)  ; Passed ByRef
+    _COL_uniformalize_args(group_name, win_criteria) ; Passed ByRef
     _COL_SetupGroup(group_name, win_criteria, launch_command)
 
     ; Try to activate the group now
@@ -69,7 +69,7 @@ CycleOrLaunch(group_name:="", win_criteria:="", launch_command:="") {
             Sleep, 1000
         }
         ToolTip,,,, %_TOOLTIP_LAUNCH%
-        Return
+    Return
 }
 
 ; -- auxiliary functions ------------------------------------------------------
@@ -94,7 +94,7 @@ _COL_SetupGroup(group_name, win_criteria, launch_command) {
 
     ; Add all criteria to group
     ; Schedule launch_command to be launched when a failed attempt to activate
-    ; this group is made. 
+    ; this group is made.
     For i, criteria in win_criteria {
         if (i = 1 and launch_command) {
             GroupAdd, %group_name%, %criteria%,, when_no_match
@@ -109,7 +109,7 @@ _COL_SetupGroup(group_name, win_criteria, launch_command) {
 
 _COL_GenerateGroupName() {
     Loop, 10 {
-        Random, r, 65, 90  ; A-Z
+        Random, r, 65, 90 ; A-Z
         s .= Chr(r)
     }
     Return s
@@ -122,9 +122,9 @@ _COL_Flatten(criteria_array) {
     Return ret
 }
 
-; -----------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ; Gratuitous bling
-; -----------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 
 _COL_Blink() {
     Winset Transparent, 192, A
@@ -162,7 +162,7 @@ _COL_ShowGroupInTooltip(group_name) {
             SetTimer,, Off
             ToolTip,,,, %_TOOLTIP_GROUP%
         }
-        Return
+    Return
 }
 
 _COL_GetWindowsInGroup(group_name) {
@@ -174,8 +174,8 @@ _COL_GetWindowsInGroup(group_name) {
         window_id := pseudo_array%A_Index%
         WinGetTitle, window_name, ahk_id %window_id%
         Array.Push({ id: window_id
-                   , name: window_name
-                   , is_newest: A_Index = pseudo_array })
+            , name: window_name
+            , is_newest: A_Index = pseudo_array })
     }
     return Array
 }

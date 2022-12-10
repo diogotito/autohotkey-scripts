@@ -1,18 +1,18 @@
-; -----------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ; Hotkeys to change monitor brightness through Monitorian
 ; Requires RunWaitOne_PrepareHiddenWindow() to have been run once
-; -----------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 #+NumpadAdd::
 	Run, Monitorian.exe /set all +15
 	c := "[+] Increasing brightness...."
-	SetTimer, showBrightness, -1  ; 1 ms timeout (-) to run in another "thread"
-	return
+	SetTimer, showBrightness, -1 ; 1 ms timeout (-) to run in another "thread"
+return
 
 #+NumpadSub::
 	Run, Monitorian.exe /set all -15
 	c := "[-] Reducing brightness...."
-	SetTimer, showBrightness, -1  ; 1 ms timeout (-) to run in another "thread"
-	return
+	SetTimer, showBrightness, -1 ; 1 ms timeout (-) to run in another "thread"
+return
 
 showBrightness() {
 	global
@@ -41,5 +41,5 @@ showBrightness() {
 			ToolTip,,
 			SetTimer,, Off
 		}
-		return
+	return
 }

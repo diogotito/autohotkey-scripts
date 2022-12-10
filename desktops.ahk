@@ -1,82 +1,39 @@
-; =============================================================================
+;==============================================================================
 ; desktops.ahk:
-; The entry point to a bunch of utilities and hotkeys
-; -----------------------------------------------------------------------------
+; The main script file that #Includes and defines many utilities and hotkeys
+;------------------------------------------------------------------------------
 ; Organization:
 ;   1. Local library
 ;   2. Development aids
-;   3. Enhanced Windows desktop workflows
-;   4. Hotstrings
-;   5. Application shortcuts
-;   6. Hotkeys to cycle between window groups -- see Lib\CycleOrLaunch.ahk
-;   7. Misc hotkeys
-; =============================================================================
+;   3. Hotstrings
+;   4. Application shortcuts
+;   5. Hotkeys to cycle between window groups -- see Lib\CycleOrLaunch.ahk
+;   6. Misc hotkeys
+;==============================================================================
 
 #SingleInstance force
+
 SetTitleMatchMode 2 ; Match anywhere
 
 ; This is a 16x16 pixel-art keyboard icon drawn by TOMAZ-DIONISIO
 Menu Tray, Icon, Icons\KEYBOARD.ico
 
-; -----------------------------------------------------------------------------
-; 1. Local library
-; -----------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+; 1. Local library: Bring things from Lib\
+;------------------------------------------------------------------------------
 RunWaitOne_PrepareHiddenWindow()
 Zim_Launch()
-#Include Lib\VD.ahk
-#Include Lib\CycleOrLaunch.ahk
+#Include <Util>
 ; !!! End of auto-execute section !!!  Only hotkeys/hotstrings from here on!
-#Include Lib\MonitorianKeys.ahk
-#Include Lib\PowerToysRunKeys.ahk
-#Include Lib\Switch-Windows-same-App.ahk
-; -----------------------------------------------------------------------------
+#Include <WindowsDesktopKeys>
+#Include <MonitorianKeys>
+#Include <PowerToysRunKeys>
+#Include <Switch-Windows-same-App>
+;------------------------------------------------------------------------------
 
-; 1.5. staging
-LogToolTip(newText := "") {
-    static text := ""
-    if (newText) {
-        text .= newText
-        ToolTip % text, 0, 0
-    } else {
-        text := ""
-        ToolTip,,
-    }
-}
-
-#q::
-    qrencode() {
-        qrencode = C:\tools\msys64\mingw64\bin\qrencode.exe
-        image = %A_Temp%\qrencode.png
-
-        if not Clipboard {
-            ToolTip Não há texto no Clipboard
-            Sleep 1000
-            ToolTip,,
-            Return
-        }
-
-        try {
-            LogToolTip("> a correr qrencode:`n" qrencode "`nClipboard = " Clipboard)
-            RunWait %qrencode% "%Clipboard%" -s 20 -o %image%,, UseErrorLevel
-            LogToolTip("`n-----`n")
-            Sleep 200
-            LogToolTip("> a lancar o visualizador de imagens:`n" image)
-            Run %image%,, UseErrorLevel
-            LogToolTip("`n-----`n")
-            Sleep 2000
-            LogToolTip("> a apagar a imagem")
-            FileDelete %image%
-            LogToolTip()
-        } catch e {
-            MsgBox Houve um erro!`nSpecifically: %e%`nA_LastError = %A_LastError%
-        } finally {
-            LogToolTip()
-        }
-    }
-
-; -----------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ; 2. Development aids
-; -----------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 
 ; Exit the script
 #+F4::
@@ -94,154 +51,26 @@ return
 ; Quickly open this project in VS Code
 ^#!F5::Run, %A_ComSpec% /c "code %A_ScriptDir%"
 
-; -----------------------------------------------------------------------------
-; 3. Enhanced Windows desktop workflows
-; -----------------------------------------------------------------------------
-
-; More ergonomic window management
-#+Q::SendInput !{F4}
-
-; Cycle between File Explorer windows
-^#!X::CycleOrLaunch("FileExplorer", "ahk_class CabinetWClass", "explorer.exe")
-
-; Get to the %PATH% quicker
-#+O::Run SystemPropertiesAdvanced.exe
-
-; Cybernetically enhanced charmap.exe
-#C::
-    CycleOrLaunch("charmap", "Character Map ahk_exe charmap.exe", "charmap.exe")
-    WinShow Character Map ahk_exe charmap.exe
-    ControlFocus, Edit2, Character Map ahk_exe charmap.exe
-Return
-
-#IfWinActive Character Map ahk_exe charmap.exe
-    ^F::ControlFocus Edit2
-    ^H::ControlSend RICHEDIT50W1, {BackSpace}
-    ^BackSpace::Send ^+{Left}{BackSpace}
-    Esc::WinHide
-
-    ; Control the character grid, Vim-style
-    !h::ControlSend CharGridWClass1, {Left}
-    !j::ControlSend CharGridWClass1, {Down}
-    !k::ControlSend CharGridWClass1, {Up}
-    !l::ControlSend CharGridWClass1, {Right}
-
-    ; Quickly copy the highlighted character in the grid and hide Character Map
-    ^C::
-        SetControlDelay 100
-        ControlSetText RICHEDIT50W1, % ""
-        ControlClick Button1
-        ControlClick Button2
-        WinHide
-    Return
-#IfWinActive
-
-; I want to open a terminal with a hotkey
-#+Enter::Run, CMD.EXE
-#Enter::CycleOrLaunch("WindowsTerminal"
-    ,"ahk_class CASCADIA_HOSTING_WINDOW_CLASS ahk_exe WindowsTerminal.exe"
-    , "wt.exe")
-
-; File Explorer enhancements
-InputFocusIn(control, win_title) {
-    ControlGetFocus focused_control, %win_title%
-    Return focused_control == control
-}
-
-#IfWinActive ahk_class CabinetWClass ahk_exe explorer.exe
-    !+C::SendInput ^l^aC:\
-    !+D::SendInput ^l^aD:\
-    !+E::SendInput ^l^aE:\{Enter}
-    !+F::SendInput ^l^aF:\{Enter}
-    !+T::SendInput ^l^aT:\
-    !+S::SendInput ^l^asubl -d .{Enter} ; Open Sublime Text here
-    !+V::SendInput ^l^acode .{Enter} ; Open VS Code here
-    !+V::SendInput ^l^awt nt -d .{Enter} ; Open Windows Terminal here
-    !+N::SendInput ^l^aserve.cmd .{Enter} ; Run a dev. static file server here
-    ^Tab::GroupActivate G_FileExplorer, R
-    +^Tab::GroupActivate G_FileExplorer
-#If InputFocusIn("Edit1", "ahk_class CabinetWClass ahk_exe explorer.exe")
-    /::\
-    Tab::Down
-    +Tab::Up
-#If
-
-; Virtual desktops (courtesy of Ciantic/VirtualDesktopAccessor)
-; BTW https://github.com/Grabacr07/SylphyHorn goes well with this
-; I use it to:
-;   * Show the current desktop number / number of total desktops in the tray
-;   * Move windows to adjacent desktops with keyboard shortcuts
-#n::VD_GoToNextDesktop()
-#+n::VD_GoToPrevDesktop()
-
-^#!1::
-^#!Numpad1::
-    VD_GoToDesktopNumber(0)
-Return
-
-^#!2::
-^#!Numpad2::
-    VD_GoToDesktopNumber(1)
-Return
-
-^#!3::
-^#!Numpad3::
-    VD_GoToDesktopNumber(2)
-Return
-
-^#!4::
-^#!Numpad4::
-    VD_GoToDesktopNumber(3)
-Return
-
-^#!5::
-^#!Numpad5::
-    VD_GoToDesktopNumber(4)
-Return
-
-^#!6::
-^#!Numpad6::
-    VD_GoToDesktopNumber(5)
-Return
-
-^#!7::
-^#!Numpad7::
-    VD_GoToDesktopNumber(6)
-Return
-
-^#!8::
-^#!Numpad8::
-    VD_GoToDesktopNumber(7)
-Return
-
-^#!9::
-^#!Numpad9::
-    VD_GoToDesktopNumber(8)
-Return
-
-^#!0::
-^#!Numpad0::
-    VD_GoToDesktopNumber(9)
-Return
-
-; -----------------------------------------------------------------------------
-; 4. Hotstrings
-; -----------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+; 3. Hotstrings
+;------------------------------------------------------------------------------
 ; TODO
 ; I haven't come up with good ideas for hotstrings and I never felt the need
 ; But there are a few in Hillel's blog: https://www.hillelwayne.com/post/ahk/
+;------------------------------------------------------------------------------
 
-; -----------------------------------------------------------------------------
-; 5. Application shortcuts
-; -----------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+; 4. Application shortcuts
+;------------------------------------------------------------------------------
 ^#!T::Run C:\Users\diogotito\AppData\Roaming\Telegram Desktop\Telegram.exe
 ^#!P::Run C:\Users\diogotito\AppData\Local\SumatraPDF\SumatraPDF.exe
 ^#!L::Run C:\Program Files\texstudio\texstudio.exe
 ^#!M::Run C:\Users\diogotito\AppData\Local\Programs\caprine\Caprine.exe
 
-; -----------------------------------------------------------------------------
-; 6. Hotkeys to cycle between window groups -- see Lib\CycleOrLaunch.ahk
-; -----------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+; 5. Hotkeys to cycle between window groups -- see Lib\CycleOrLaunch.ahk
+;------------------------------------------------------------------------------
+#Include <CycleOrLaunch>
 
 ; Help & Documentation windows
 ^#!H::CycleOrLaunch("Docs"
@@ -256,6 +85,9 @@ HellYeah(msg:="DEFAULT!") {
 
 ; Lib\Zim.ahk
 #z::Zim()
+
+; Cycle between File Explorer windows
+^#!X::CycleOrLaunch("FileExplorer", "ahk_class CabinetWClass", "explorer.exe")
 
 ; 7-Zip File Manager
 ^#!Z::CycleOrLaunch("7zFM"
@@ -290,18 +122,17 @@ HellYeah(msg:="DEFAULT!") {
     , "WinMerge ahk_class WinMergeWindowClassW"
     , "ahk_exe Fork.exe"])
 
-; -----------------------------------------------------------------------------
-; 7. Misc hotkeys
-; -----------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+; 6. Misc hotkeys
+;------------------------------------------------------------------------------
+
+#q::qrencode() ; Lib\qrencode.ahk
 
 ; Open Bitwarden and click "Unlock with Windows Hello"
 ^#!B::
     OpenBitwarden() {
         Run "C:\Program Files\Bitwarden\Bitwarden.exe"
-
-        CRITERIA = Bitwarden ahk_exe Bitwarden.exe ahk_class Chrome_WidgetWin_1
-
-        WinWait %CRITERIA%
+        WinWait Bitwarden ahk_exe Bitwarden.exe ahk_class Chrome_WidgetWin_1
         WinGetPos X, Y, Width, Height
         btn_x := X + Width / 2 + 65
         btn_y := Y + Height / 2 + 145
@@ -317,36 +148,36 @@ F5::
     ToolTip,,
 return
 
-; -----------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ; Add a few force-of-habit convenience shortcuts to the 7-Zip File Manager
-; -----------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 #IfWinActive ahk_class FM ahk_exe 7zFM.exe
     ^B::Send {F9} ; Toggle 2 panels
     ^L::
         ; Focus the "address bar" of the active pane
-        ControlGetFocus, focused_control
-        if RegExMatch(focused_control, "32\K[12]$" , one_or_two) {
-            ControlFocus, Edit%one_or_two%
+        ControlGetFocus focused_control
+        if RegExMatch(focused_control, "32\K[12]$", one_or_two) {
+            ControlFocus Edit%one_or_two%
         }
     Return
 
-; -----------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ; Ctrl+Tab to switch between the two MRU tabs in Microsoft Edge using QuicKey
-; -----------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 #IfWinActive ahk_class Chrome_WidgetWin_1 ahk_exe msedge.exe
     ^Tab::SendInput !z
     ^+Tab::SendInput !q
 
-; -----------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ; TeXstudio (MRU)
-; -----------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 #IfWinActive TeXstudio
     ^Tab::SendInput ^o{Enter}
     ^+Tab::SendInput ^o{Enter}
 
-; -----------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ; Firefox's Awesome Bar shortcuts
-; -----------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 #IfWinActive Mozilla Firefox
     !+2::SendInput ^l+2 ; search engines
     !+3::SendInput ^l+3{Space} ; every search term is part of title or tag

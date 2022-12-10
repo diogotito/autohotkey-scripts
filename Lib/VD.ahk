@@ -1,14 +1,17 @@
-; ------------------------------------------------- ;
-; https://github.com/Ciantic/VirtualDesktopAccessor ;
-; README.markdown > ## AutoHotkey script as example ;
-; ------------------------------------------------- ;
+;==============================================================================
+; https://github.com/Ciantic/VirtualDesktopAccessor
+; README.markdown > ## AutoHotkey script as example
+;------------------------------------------------------------------------------
+; Dependents:
+;   - Lib\WindowsDesktopKeys.ahk: Defines hotkeys to switch desktops
+;------------------------------------------------------------------------------
 ; VD_GoToPrevDesktop()
 ; VD_GoToNextDesktop()
 ; VD_GoToDesktopNumber(num)
 ; VD_MoveCurrentWindowToDesktop(num)
-; ------------------------------------------------- ;
+;==============================================================================
 
-_VD_hVirtualDesktopAccessor := DllCall("LoadLibrary", Str, "submodules\VirtualDesktopAccessor\x64\Release\VirtualDesktopAccessor.dll", "Ptr") 
+_VD_hVirtualDesktopAccessor := DllCall("LoadLibrary", Str, "submodules\VirtualDesktopAccessor\x64\Release\VirtualDesktopAccessor.dll", "Ptr")
 _VD_GoToDesktopNumberProc := DllCall("GetProcAddress", Ptr, _VD_hVirtualDesktopAccessor, AStr, "GoToDesktopNumber", "Ptr")
 _VD_GetCurrentDesktopNumberProc := DllCall("GetProcAddress", Ptr, _VD_hVirtualDesktopAccessor, AStr, "GetCurrentDesktopNumber", "Ptr")
 _VD_IsWindowOnCurrentVirtualDesktopProc := DllCall("GetProcAddress", Ptr, _VD_hVirtualDesktopAccessor, AStr, "IsWindowOnCurrentVirtualDesktop", "Ptr")
@@ -24,8 +27,8 @@ _VD_activeWindowByDesktop := {}
 _VD_explorerRestartMsg := DllCall("user32\RegisterWindowMessage", "Str", "TaskbarCreated")
 OnMessage(_VD_explorerRestartMsg, "OnExplorerRestart")
 OnExplorerRestart(wParam, lParam, msg, hwnd) {
-    global _VD_RestartVirtualDesktopAccessorProc
-    DllCall(_VD_RestartVirtualDesktopAccessorProc, UInt, result)
+	global _VD_RestartVirtualDesktopAccessorProc
+	DllCall(_VD_RestartVirtualDesktopAccessorProc, UInt, result)
 }
 
 VD_MoveCurrentWindowToDesktop(number) {
@@ -42,7 +45,7 @@ VD_GoToPrevDesktop() {
 	if (current = 0) {
 		VD_GoToDesktopNumber(7)
 	} else {
-		VD_GoToDesktopNumber(current - 1)      
+		VD_GoToDesktopNumber(current - 1)
 	}
 	return
 }
@@ -53,7 +56,7 @@ VD_GoToNextDesktop() {
 	if (current = 7) {
 		VD_GoToDesktopNumber(0)
 	} else {
-		VD_GoToDesktopNumber(current + 1)    
+		VD_GoToDesktopNumber(current + 1)
 	}
 	return
 }
@@ -63,7 +66,7 @@ VD_GoToDesktopNumber(num) {
 
 	; Store the active window of old desktop, if it is not pinned
 	WinGet, activeHwnd, ID, A
-	current := DllCall(_VD_GetCurrentDesktopNumberProc, UInt) 
+	current := DllCall(_VD_GetCurrentDesktopNumberProc, UInt)
 	isPinned := DllCall(_VD_IsPinnedWindowProc, UInt, activeHwnd)
 	if (isPinned == 0) {
 		_VD_activeWindowByDesktop[current] := activeHwnd
@@ -86,9 +89,9 @@ VWMess(wParam, lParam, msg, hwnd) {
 	global _VD_IsWindowOnCurrentVirtualDesktopProc, _VD_IsPinnedWindowProc, _VD_activeWindowByDesktop
 
 	desktopNumber := lParam + 1
-	
+
 	; Try to restore active window from memory (if it's still on the desktop and is not pinned)
-	WinGet, activeHwnd, ID, A 
+	WinGet, activeHwnd, ID, A
 	isPinned := DllCall(_VD_IsPinnedWindowProc, UInt, activeHwnd)
 	oldHwnd := _VD_activeWindowByDesktop[lParam]
 	isOnDesktop := DllCall(_VD_IsWindowOnCurrentVirtualDesktopProc, UInt, oldHwnd, Int)

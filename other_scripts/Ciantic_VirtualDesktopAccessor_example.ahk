@@ -1,13 +1,13 @@
-; ------------------------------------------------- ;
+;-------------------------------------------------- ;
 ; https://github.com/Ciantic/VirtualDesktopAccessor ;
 ; README.markdown > ## AutoHotkey script as example ;
-; ------------------------------------------------- ;
+;-------------------------------------------------- ;
 
 DetectHiddenWindows, On
 hwnd:=WinExist("ahk_pid " . DllCall("GetCurrentProcessId","Uint"))
 hwnd+=0x1000<<32
 
-hVirtualDesktopAccessor := DllCall("LoadLibrary", Str, "C:\Source\CandCPP\VirtualDesktopAccessor\x64\Release\VirtualDesktopAccessor.dll", "Ptr") 
+hVirtualDesktopAccessor := DllCall("LoadLibrary", Str, "C:\Source\CandCPP\VirtualDesktopAccessor\x64\Release\VirtualDesktopAccessor.dll", "Ptr")
 GoToDesktopNumberProc := DllCall("GetProcAddress", Ptr, hVirtualDesktopAccessor, AStr, "GoToDesktopNumber", "Ptr")
 GetCurrentDesktopNumberProc := DllCall("GetProcAddress", Ptr, hVirtualDesktopAccessor, AStr, "GetCurrentDesktopNumber", "Ptr")
 IsWindowOnCurrentVirtualDesktopProc := DllCall("GetProcAddress", Ptr, hVirtualDesktopAccessor, AStr, "IsWindowOnCurrentVirtualDesktop", "Ptr")
@@ -23,8 +23,8 @@ activeWindowByDesktop := {}
 explorerRestartMsg := DllCall("user32\RegisterWindowMessage", "Str", "TaskbarCreated")
 OnMessage(explorerRestartMsg, "OnExplorerRestart")
 OnExplorerRestart(wParam, lParam, msg, hwnd) {
-    global RestartVirtualDesktopAccessorProc
-    DllCall(RestartVirtualDesktopAccessorProc, UInt, result)
+	global RestartVirtualDesktopAccessorProc
+	DllCall(RestartVirtualDesktopAccessorProc, UInt, result)
 }
 
 MoveCurrentWindowToDesktop(number) {
@@ -41,7 +41,7 @@ GoToPrevDesktop() {
 	if (current = 0) {
 		GoToDesktopNumber(7)
 	} else {
-		GoToDesktopNumber(current - 1)      
+		GoToDesktopNumber(current - 1)
 	}
 	return
 }
@@ -52,7 +52,7 @@ GoToNextDesktop() {
 	if (current = 7) {
 		GoToDesktopNumber(0)
 	} else {
-		GoToDesktopNumber(current + 1)    
+		GoToDesktopNumber(current + 1)
 	}
 	return
 }
@@ -62,7 +62,7 @@ GoToDesktopNumber(num) {
 
 	; Store the active window of old desktop, if it is not pinned
 	WinGet, activeHwnd, ID, A
-	current := DllCall(GetCurrentDesktopNumberProc, UInt) 
+	current := DllCall(GetCurrentDesktopNumberProc, UInt)
 	isPinned := DllCall(IsPinnedWindowProc, UInt, activeHwnd)
 	if (isPinned == 0) {
 		activeWindowByDesktop[current] := activeHwnd
@@ -85,9 +85,9 @@ VWMess(wParam, lParam, msg, hwnd) {
 	global IsWindowOnCurrentVirtualDesktopProc, IsPinnedWindowProc, activeWindowByDesktop
 
 	desktopNumber := lParam + 1
-	
+
 	; Try to restore active window from memory (if it's still on the desktop and is not pinned)
-	WinGet, activeHwnd, ID, A 
+	WinGet, activeHwnd, ID, A
 	isPinned := DllCall(IsPinnedWindowProc, UInt, activeHwnd)
 	oldHwnd := activeWindowByDesktop[lParam]
 	isOnDesktop := DllCall(IsWindowOnCurrentVirtualDesktopProc, UInt, oldHwnd, Int)
@@ -96,19 +96,19 @@ VWMess(wParam, lParam, msg, hwnd) {
 	}
 
 	; Menu, Tray, Icon, Icons/icon%desktopNumber%.ico
-	
+
 	; When switching to desktop 1, set background pluto.jpg
 	; if (lParam == 0) {
-		; DllCall("SystemParametersInfo", UInt, 0x14, UInt, 0, Str, "C:\Users\Jarppa\Pictures\Backgrounds\saturn.jpg", UInt, 1)
+	; DllCall("SystemParametersInfo", UInt, 0x14, UInt, 0, Str, "C:\Users\Jarppa\Pictures\Backgrounds\saturn.jpg", UInt, 1)
 	; When switching to desktop 2, set background DeskGmail.png
 	; } else if (lParam == 1) {
-		; DllCall("SystemParametersInfo", UInt, 0x14, UInt, 0, Str, "C:\Users\Jarppa\Pictures\Backgrounds\DeskGmail.png", UInt, 1)
+	; DllCall("SystemParametersInfo", UInt, 0x14, UInt, 0, Str, "C:\Users\Jarppa\Pictures\Backgrounds\DeskGmail.png", UInt, 1)
 	; When switching to desktop 7 or 8, set background DeskMisc.png
 	; } else if (lParam == 2 || lParam == 3) {
-		; DllCall("SystemParametersInfo", UInt, 0x14, UInt, 0, Str, "C:\Users\Jarppa\Pictures\Backgrounds\DeskMisc.png", UInt, 1)
+	; DllCall("SystemParametersInfo", UInt, 0x14, UInt, 0, Str, "C:\Users\Jarppa\Pictures\Backgrounds\DeskMisc.png", UInt, 1)
 	; Other desktops, set background to DeskWork.png
 	; } else {
-		; DllCall("SystemParametersInfo", UInt, 0x14, UInt, 0, Str, "C:\Users\Jarppa\Pictures\Backgrounds\DeskWork.png", UInt, 1)
+	; DllCall("SystemParametersInfo", UInt, 0x14, UInt, 0, Str, "C:\Users\Jarppa\Pictures\Backgrounds\DeskWork.png", UInt, 1)
 	; }
 }
 
