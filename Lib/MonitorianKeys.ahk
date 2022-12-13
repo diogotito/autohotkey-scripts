@@ -2,6 +2,7 @@
 ; Hotkeys to change monitor brightness through Monitorian
 ; Requires RunWaitOne_PrepareHiddenWindow() to have been run once
 ;------------------------------------------------------------------------------
+
 #+NumpadAdd::
 	Run, Monitorian.exe /set all +15
 	c := "[+] Increasing brightness...."
@@ -31,17 +32,18 @@ return
 	Run, Monitorian.exe /set all %input_brightness%
 return
 
-overlayBrightness() {
-	output := RunWaitOne("Monitorian.exe /get all")
-	brightness := StrSplit(output, A_Space)[3]
-	bar := drawBar(brightness)
+;------------------------------------------------------------------------------
+; Auxiliary functions
+;------------------------------------------------------------------------------
 
-	CoordMode ToolTip, Screen
-	ToolTip,
-	( LTrim
-		[%brightness%] current brightness
-		[%bar%]
-	), % A_ScreenWidth / 2 - 85, % A_ScreenHeight / 2 - 45
+drawBar(brightness) {
+	bar := ""
+	Loop 15 {
+		delta := (A_Index - 1)/(15) * 100 - brightness
+		bar .= delta < 0 ? "#" : delta < (15) ? ": " : "- "
+		; bar .= Format("[{:.2f}]", delta)
+	}
+	return bar
 }
 
 showBrightness() {
@@ -67,12 +69,15 @@ showBrightness() {
 	return
 }
 
-drawBar(brightness) {
-	bar := ""
-	Loop 15 {
-		delta := (A_Index - 1)/(15) * 100 - brightness
-		bar .= delta < 0 ? "#" : delta < (15) ? ": " : "- "
-		; bar .= Format("[{:.2f}]", delta)
-	}
-	return bar
+overlayBrightness() {
+	output := RunWaitOne("Monitorian.exe /get all")
+	brightness := StrSplit(output, A_Space)[3]
+	bar := drawBar(brightness)
+
+	CoordMode ToolTip, Screen
+	ToolTip,
+	( LTrim
+		[%brightness%] current brightness
+		[%bar%]
+	), % A_ScreenWidth / 2 - 85, % A_ScreenHeight / 2 - 45
 }
