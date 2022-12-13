@@ -20,7 +20,7 @@ return
 	( LTrim
 		Enter new value
 		[0-100]
-	),, 162, 200
+	),, 162, 200,,,,, %input_brightness%
 	ToolTip,,
 
 	if input_brightness is not Integer
