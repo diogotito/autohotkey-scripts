@@ -149,7 +149,7 @@ F5::
 return
 
 ;------------------------------------------------------------------------------
-; Add a few force-of-habit convenience shortcuts to the 7-Zip File Manager
+; Add a few force-of-habit convenience shortcuts for the 7-Zip File Manager
 ;------------------------------------------------------------------------------
 #IfWinActive ahk_class FM ahk_exe 7zFM.exe
     ^B::Send {F9} ; Toggle 2 panels
