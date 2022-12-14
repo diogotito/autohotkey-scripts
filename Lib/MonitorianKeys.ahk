@@ -24,6 +24,8 @@ return
 	),, 162, 200,,,,, %input_brightness%
 	ToolTip,,
 
+	if ErrorLevel
+		return
 	if input_brightness is not Integer
 		return
 	if input_brightness not between -100 and +100
