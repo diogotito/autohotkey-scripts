@@ -29,12 +29,13 @@ Zim() {
         ; Use standard Windows hotkeys to "click" the icon.
         CoordMode Mouse, Screen
         MouseGetPos mouseX, mouseY
-        ; Press Right 3x to jump over this script's AHK icon bc it eats the z?
-        SendInput #b{Right}{Right}{Right}z
-        Sleep 40
+        ; Press Right to jump over this script's AHK icon bc it eats the z?
+        SendInput #b{Right}z
+        Sleep 75
         SendInput {Enter}
-        Sleep 10
+        Sleep 25
         MouseMove % mouseX, % mouseY
+        WinActivate % Zim_Criteria()
     } else {
         ; There isn't any Zim window. Relaunch it.
         ToolTip Launching zim.exe`nto bring up the notebook...
