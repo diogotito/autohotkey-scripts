@@ -28,8 +28,10 @@ return
 	ToolTip,,
 
 	if ErrorLevel
-		|| (input_brightness is not Integer)
-		|| (input_brightness not between -100 and +100)
+		return
+	if input_brightness is not Integer
+		return
+	if input_brightness not between -100 and +100
 		return
 
 	Run, Monitorian.exe /set all %input_brightness%
