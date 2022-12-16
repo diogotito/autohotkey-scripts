@@ -17,18 +17,19 @@ return
 
 #+NumpadEnter::
 	SetTimer overlayBrightness, -1
+
+	plus_or_minus := Chr(0x00B1)
 	InputBox input_brightness, Set brightness,
 	( LTrim
 		Enter new value
-		[0-100]
+		[%plus_or_minus%] 0 .. 100
 	),, 162, 200,,,,, %input_brightness%
+
 	ToolTip,,
 
 	if ErrorLevel
-		return
-	if input_brightness is not Integer
-		return
-	if input_brightness not between -100 and +100
+		|| (input_brightness is not Integer)
+		|| (input_brightness not between -100 and +100)
 		return
 
 	Run, Monitorian.exe /set all %input_brightness%
