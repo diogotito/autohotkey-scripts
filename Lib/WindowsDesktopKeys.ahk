@@ -33,20 +33,53 @@ InputFocusIn(control, win_title) {
     Return focused_control == control
 }
 
-#IfWinActive ahk_class CabinetWClass ahk_exe explorer.exe
+#IfWinActive ahk_group G_FileExplorer
     !+C::SendInput ^l^aC:\
     !+D::SendInput ^l^aD:\
     !+E::SendInput ^l^aE:\{Enter}
     !+T::SendInput ^l^aT:\
-    ~::SendInput ^l^a`%USERPROFILE`%\
-    |::SendInput ^l^a`%USERPROFILE`%\
+    ~::
+    |::
+        SendInput ^l^a%A_UserName%\
+    Return
     !+S::SendInput ^l^asubl -d .{Enter} ; Open Sublime Text here
     !+V::SendInput ^l^acode .{Enter} ; Open VS Code here
     !+W::SendInput ^l^awt nt -d .{Enter} ; Open Windows Terminal here
     !+N::SendInput ^l^aserve.cmd .{Enter} ; Run a dev. static file server here
     ^Tab::GroupActivate G_FileExplorer, R
     +^Tab::GroupActivate G_FileExplorer
-#If InputFocusIn("Edit1", "ahk_class CabinetWClass ahk_exe explorer.exe")
+    !+?::
+        ToolTip,
+        ( LTrim
+            My File Explorer hotkeys
+            ~~~~~~~~~~~~~~~~
+            [Alt] + [%Chr_Shift% Shift] +
+            %Str_Indent% C`tType "C:\"
+            %Str_Indent% D`tType "D:\"
+            %Str_Indent% E`tType "E:\"
+            %Str_Indent% T`tType "T:\"
+            %Str_Indent% S`tOpen Sublime Text here
+            %Str_Indent% V`tOpen VS Code here
+            %Str_Indent% W`tOpen Windows Terminal here
+            %Str_Indent% N`tRun an HTTP server (npx serve) here
+            [Alt] +
+            %Str_Indent% P`tToggle Preview pane (or Details pane with [%Chr_Shift% Shift])
+            %Str_Indent% B`tToggle Navigation pane
+            %Str_Indent% R`tToggle Ribbon
+            [Ctrl] +
+            %Str_Indent% [%Chr_Tab% Tab]`t`tSwitch to next File Explorer window
+            %Str_Indent% [%Chr_Shift% Shift] + [%Chr_Tab% Tab]`tSwitch to previous File Explorer window
+        )
+        Sleep 2000
+    dismiss_tooltip_when_all_modifiers_released:
+        if GetKeyState("Alt", "P") || GetKeyState("Shift", "P") {
+            SetTimer dismiss_tooltip_when_all_modifiers_released, -100
+        } else {
+            ToolTip,,
+        }
+
+    Return
+#If InputFocusIn("Edit1", "ahk_group FileExplorer")
     #IncludeAgain <ReadlineKeys>
     /::\
     Tab::SendInput {Down}

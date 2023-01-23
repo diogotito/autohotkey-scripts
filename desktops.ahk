@@ -1,3 +1,4 @@
+#Requires AutoHotKey v1.1.33+
 ;==============================================================================
 ; desktops.ahk:
 ; The main script file that #Includes and defines many utilities and hotkeys
@@ -66,15 +67,20 @@ return
 ^#!P::Run C:\Users\diogotito\AppData\Local\SumatraPDF\SumatraPDF.exe
 ^#!L::Run C:\Program Files\texstudio\texstudio.exe
 ^#!M::Run C:\Users\diogotito\AppData\Local\Programs\caprine\Caprine.exe
+^#!D::CycleOrLaunch("Discord"
+    , ELECTRON("Discord")
+    , "C:\Users\diogotito\AppData\Local\Discord\app-1.0.9008\Discord.exe")
+^#!E::CycleOrLaunch("Godot"
+    , "ahk_class Engine"
+    , "C:\tools\Godot\Godot_v3.5.1-stable_win64.exe")
 
 ;------------------------------------------------------------------------------
 ; 5. Hotkeys to cycle between window groups -- see Lib\CycleOrLaunch.ahk
 ;------------------------------------------------------------------------------
-#Include <CycleOrLaunch>
 
 ; Help & Documentation windows
 ^#!H::CycleOrLaunch("Docs"
-    , [ "DevDocs ahk_class Chrome_WidgetWin_1"
+    , [ "DevDocs " ELECTRON("msedge")
     , "ahk_class HH Parent"
     , "help ahk_class QWidget" ]
     , Func("HellYeah").Bind("NOT THE DEFAULT MESSAGE !!"))
@@ -96,17 +102,23 @@ HellYeah(msg:="DEFAULT!") {
 
 ; Obsidian
 ^#!O::CycleOrLaunch("Obsidian"
-    , "ahk_class Chrome_WidgetWin_1 ahk_exe Obsidian.exe"
-    , """C:\Users\diogotito\AppData\Local\Obsbsidian.exe""")
+    , ELECTRON("Obsidian")
+    , """C:\Users\diogotito\AppData\Local\Obsidian\Obsidian.exe""")
 
 ; Sublime text
 ^#!S::CycleOrLaunch("SublimeText"
     , " - Sublime Text ahk_class PX_WINDOW_CLASS ahk_exe sublime_text.exe"
     , "subl")
 
+; Neovim
+^#!N::CycleOrLaunch("Neovim"
+    , "Neovim ahk_exe nvim-qt.exe"
+    , "nvim-qt")
+
 ; VS Code window group  -- because ^#!C::RunWaitOne("code -r") is a bit slow
 ^#!C::CycleOrLaunch("VSCode"
-    , " - Visual Studio Code ahk_class Chrome_WidgetWin_1 ahk_exe Code.exe"
+    , [" - Visual Studio Code " ELECTRON("Code")
+    , "Clock ahk_class ApplicationFrameWindow"]
     , Func("RunWaitOne").Bind("""code"" --reuse-window"))
 
 ; Firefox, Chrome, Edge, etc.
@@ -116,11 +128,11 @@ HellYeah(msg:="DEFAULT!") {
 ^#!+F::Run "C:\Program Files\Mozilla Firefox\firefox.exe"
 
 ; Git GUI, gitk, Fork, SourceTree, WinMerge, you name it
-^#!G::CycleOrLaunch("GitGUIs"
+^#!A::CycleOrLaunch("GitGUIs"
     , [ "Git Gui ahk_class TkTopLevel ahk_exe wish.exe"
     , "gitk ahk_class TkTopLevel ahk_exe wish.exe"
     , "WinMerge ahk_class WinMergeWindowClassW"
-    , "ahk_exe Fork.exe"])
+    , "Fork ahk_exe Fork.exe"])
 
 ;------------------------------------------------------------------------------
 ; 6. Misc hotkeys
@@ -132,7 +144,7 @@ HellYeah(msg:="DEFAULT!") {
 ^#!B::
     OpenBitwarden() {
         Run "C:\Program Files\Bitwarden\Bitwarden.exe"
-        WinWait Bitwarden ahk_exe Bitwarden.exe ahk_class Chrome_WidgetWin_1
+        WinWait % "Bitwarden " ELECTRON("Bitwarden")
         WinGetPos X, Y, Width, Height
         btn_x := X + Width / 2 + 65
         btn_y := Y + Height / 2 + 145
@@ -152,6 +164,8 @@ return
 ; Add a few force-of-habit convenience shortcuts for the 7-Zip File Manager
 ;------------------------------------------------------------------------------
 #IfWinActive ahk_class FM ahk_exe 7zFM.exe
+    ^Q::WinClose
+    ^W::WinClose
     ^B::Send {F9} ; Toggle 2 panels
     ^L::
         ; Focus the "address bar" of the active pane

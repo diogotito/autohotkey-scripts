@@ -3,6 +3,8 @@
 ; Requires RunWaitOne_PrepareHiddenWindow() to have been run once
 ;------------------------------------------------------------------------------
 
+#+NumpadMult::Run ms-settings:nightlight
+
 #+NumpadAdd::
 	Run, Monitorian.exe /set all +15
 	c := "[+] Increasing brightness...."
