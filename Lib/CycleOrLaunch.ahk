@@ -50,7 +50,9 @@ CycleOrLaunch(group_name:="", win_criteria:="", launch_command:="") {
         ; Notify that the launch is happening...
         ToolTip, % Format("~~ {} ~~`nLaunching {}:`n{}"
             , A_ThisHotkey, SubStr(group_name, 3)
-            , IsObject(launch_command) ? "f()"Chr(8230) : "> " launch_command)
+            , (IsObject(launch_command)
+                ? "--> Calling " launch_command.Name "()" Chr(8230)
+                : "> " launch_command))
             ,,, %_TOOLTIP_LAUNCH%
 
         ; Do the actual launching

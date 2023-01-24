@@ -113,7 +113,11 @@ HellYeah(msg:="DEFAULT!") {
 ; Neovim
 ^#!N::CycleOrLaunch("Neovim"
     , "Neovim ahk_exe nvim-qt.exe"
-    , "nvim-qt")
+    , Func("LaunchNeovim"))
+
+LaunchNeovim() {
+    Run nvim-qt, C:\Users\%A_UserName%\AppData\Local\nvim
+}
 
 ; VS Code window group  -- because ^#!C::RunWaitOne("code -r") is a bit slow
 ^#!C::CycleOrLaunch("VSCode"
