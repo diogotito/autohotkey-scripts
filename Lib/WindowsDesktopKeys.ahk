@@ -20,7 +20,7 @@
 #+O::Run SystemPropertiesAdvanced.exe
 
 ; I want to open a terminal with a hotkey
-#+Enter::Run, CMD.EXE
+#+Enter::Run CMD.EXE
 #Enter::CycleOrLaunch("WindowsTerminal"
     ,"ahk_class CASCADIA_HOSTING_WINDOW_CLASS ahk_exe WindowsTerminal.exe"
     , "wt.exe")

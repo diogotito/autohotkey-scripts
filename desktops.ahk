@@ -129,7 +129,6 @@ LaunchNeovim() {
 ^#!F::CycleOrLaunch("BrowserWindows"
     , "Mozilla Firefox ahk_class MozillaWindowClass"
     , "C:\Program Files\Mozilla Firefox\firefox.exe")
-^#!+F::Run "C:\Program Files\Mozilla Firefox\firefox.exe"
 
 ; Git GUI, gitk, Fork, SourceTree, WinMerge, you name it
 ^#!A::CycleOrLaunch("GitGUIs"
