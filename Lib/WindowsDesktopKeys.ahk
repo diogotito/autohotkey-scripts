@@ -19,10 +19,21 @@
 ; Get to the %PATH% quicker
 #+O::Run SystemPropertiesAdvanced.exe
 
-; I want to open a terminal with a hotkey
-#+Enter::Run CMD.EXE
+; I want to open a terminal with a hotkey and have a shell running FAST
+PlainCmd() {
+    CycleOrLaunch("CMD"
+        , "ahk_class ConsoleWindowClass ahk_exe cmd.exe"
+        , "cmd.exe")
+}
+#+Enter::Run CMD /C START CMD
+^#!Enter::PlainCmd()
+#IfWinActive ahk_class ConsoleWindowClass ahk_exe cmd.exe
+    ^Tab::PlainCmd()
+#IfWinActive
+
+; Windows Terminal
 #Enter::CycleOrLaunch("WindowsTerminal"
-    ,"ahk_class CASCADIA_HOSTING_WINDOW_CLASS ahk_exe WindowsTerminal.exe"
+    , "ahk_class CASCADIA_HOSTING_WINDOW_CLASS ahk_exe WindowsTerminal.exe"
     , "wt.exe")
 
 ;------------------------------------------------------------------------------
