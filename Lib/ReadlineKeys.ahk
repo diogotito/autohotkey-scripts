@@ -4,7 +4,7 @@
 ;------------------------------------------------------------------------------
 ; How to use:
 ;   - #If...
-;   - #IncludeAgain <ReadlineStyleHotkeys>
+;   - #IncludeAgain <ReadlineKeys>
 ;==============================================================================
 
 ; Emacs-style keybindings
