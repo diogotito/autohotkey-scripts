@@ -3,21 +3,21 @@
 ; Requires RunWaitOne_PrepareHiddenWindow() to have been run once
 ;------------------------------------------------------------------------------
 
-#+NumpadMult::Run ms-settings:nightlight
+^#!`::Run ms-settings:nightlight
 
-#+NumpadAdd::
+#+PgUp::
 	Run, Monitorian.exe /set all +15
 	c := "[+] Increasing brightness...."
 	SetTimer, showBrightness, -1 ; 1 ms timeout (-) to run in another "thread"
 return
 
-#+NumpadSub::
+#+PgDn::
 	Run, Monitorian.exe /set all -15
 	c := "[-] Reducing brightness...."
 	SetTimer, showBrightness, -1 ; 1 ms timeout (-) to run in another "thread"
 return
 
-#+NumpadEnter::
+#+`::
 	SetTimer overlayBrightness, -1
 
 	plus_or_minus := Chr(0x00B1)

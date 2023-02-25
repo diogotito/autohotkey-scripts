@@ -43,6 +43,7 @@ Zim_Launch()
 ExitApp
 
 ; Reload this hotkey with a keybinding -- Remeber to save first!
+^#!R::
 #+F5::
     ToolTip % "============`n= Reloading... =`n============"
     Sleep 300
@@ -69,9 +70,9 @@ return
 ^#!M::Run C:\Users\diogotito\AppData\Local\Programs\caprine\Caprine.exe
 ^#!D::CycleOrLaunch("Discord"
     , ELECTRON("Discord")
-    , "C:\Users\diogotito\AppData\Local\Discord\app-1.0.9008\Discord.exe")
+    , "C:\Users\diogotito\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Discord Inc\Discord.lnk")
 ^#!E::CycleOrLaunch("Godot"
-    , "ahk_class Engine"
+    , ["ahk_class Engine", "ahk_exe RPGVXAce.exe"]
     , "C:\tools\Godot\Godot_v3.5.1-stable_win64.exe")
 
 ;------------------------------------------------------------------------------
@@ -83,10 +84,13 @@ return
     , [ "DevDocs " ELECTRON("msedge")
     , "ahk_class HH Parent"
     , "help ahk_class QWidget" ]
-    , Func("HellYeah").Bind("NOT THE DEFAULT MESSAGE !!"))
+    , Func("LaunchDevDocs"))
 
 HellYeah(msg:="DEFAULT!") {
     MsgBox % msg
+}
+LaunchDevDocs() {
+    Run "C:\Program Files (x86)\Microsoft\Edge\Application\msedge_proxy.exe" --profile-directory=Default --app-id=ahiigpfcghkbjfcibpojancebdfjmoop --app-url=https://devdocs.io/ --app-launch-source=4, "C:\Program Files (x86)\Microsoft\Edge\Application"
 }
 
 ; Lib\Zim.ahk
@@ -116,7 +120,7 @@ HellYeah(msg:="DEFAULT!") {
     , Func("LaunchNeovim"))
 
 LaunchNeovim() {
-    Run nvim-qt, C:\Users\%A_UserName%\AppData\Local\nvim
+    Run neovide, C:\Users\%A_UserName%\AppData\Local\nvim
 }
 
 ; VS Code window group  -- because ^#!C::RunWaitOne("code -r") is a bit slow
@@ -162,6 +166,28 @@ F5::
     Sleep 500
     ToolTip,,
 return
+
+;------------------------------------------------------------------------------
+; RPG Maker VX Ace
+;------------------------------------------------------------------------------
+#IfWinActive Script Editor ahk_exe RPGVXAce.exe
+    #IncludeAgain <ReadlineKeys>
+    ^S::Send !A
+    ^R::
+        Send !A
+        WinClose
+        Send ^S
+        Send {F12}
+        Send !Y
+    return
+#IfWinActive RPG Maker VX Ace ahk_exe RPGVXAce.exe
+    ^!S::Send {F11} ; Script Editor
+    ^!D::Send {F9} ; Database
+    ^R::
+        Send ^S
+        Send {F12}
+        Send !Y
+    return
 
 ;------------------------------------------------------------------------------
 ; Add a few force-of-habit convenience shortcuts for the 7-Zip File Manager
