@@ -90,7 +90,14 @@ HellYeah(msg:="DEFAULT!") {
     MsgBox % msg
 }
 LaunchDevDocs() {
-    Run "C:\Program Files (x86)\Microsoft\Edge\Application\msedge_proxy.exe" --profile-directory=Default --app-id=ahiigpfcghkbjfcibpojancebdfjmoop --app-url=https://devdocs.io/ --app-launch-source=4, "C:\Program Files (x86)\Microsoft\Edge\Application"
+    Run,
+    ( LTrim Join`s
+        "C:\Program Files (x86)\Microsoft\Edge\Application\msedge_proxy.exe"
+        --profile-directory=Default
+        --app-id=ahiigpfcghkbjfcibpojancebdfjmoop
+        --app-url=https://devdocs.io/
+        --app-launch-source=4
+    ), "C:\Program Files (x86)\Microsoft\Edge\Application"
 }
 
 ; Lib\Zim.ahk
