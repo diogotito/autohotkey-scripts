@@ -4,6 +4,7 @@
 ;------------------------------------------------------------------------------
 
 ^#!`::Run ms-settings:nightlight
+^#!+`::Run %A_ScriptDir%\bin\toggle_darkmode.rbw
 
 #+PgUp::
 	Run, Monitorian.exe /set all +15
