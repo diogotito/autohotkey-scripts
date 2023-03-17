@@ -3,8 +3,9 @@
 ; Requires RunWaitOne_PrepareHiddenWindow() to have been run once
 ;------------------------------------------------------------------------------
 
-^#!`::Run ms-settings:nightlight
-^#!+`::Run %A_ScriptDir%\bin\toggle_darkmode.rbw
+; Scan code 29 is the `~ key
+^#!sc029::Run ms-settings:nightlight
+^#!+sc029::Run %A_ScriptDir%\bin\toggle_darkmode.rbw
 
 #+PgUp::
 	Run, Monitorian.exe /set all +15
@@ -18,7 +19,7 @@ return
 	SetTimer, showBrightness, -1 ; 1 ms timeout (-) to run in another "thread"
 return
 
-#+`::
+#+sc029::
 	SetTimer overlayBrightness, -1
 
 	plus_or_minus := Chr(0x00B1)
