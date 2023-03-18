@@ -57,6 +57,8 @@ InputFocusIn(control, win_title) {
     !+V::SendInput ^l^acode .{Enter} ; Open VS Code here
     !+W::SendInput ^l^awt nt -d .{Enter} ; Open Windows Terminal here
     !+N::SendInput ^l^aserve.cmd .{Enter} ; Run a dev. static file server here
+    !R::SendInput ^{F1}
+    !B::SendInput !vn{Enter}
     ^Tab::GroupActivate G_FileExplorer, R
     +^Tab::GroupActivate G_FileExplorer
     !+?::
