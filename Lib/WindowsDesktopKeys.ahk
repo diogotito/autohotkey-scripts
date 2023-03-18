@@ -25,11 +25,15 @@ PlainCmd() {
         , "ahk_class ConsoleWindowClass ahk_exe cmd.exe"
         , "cmd.exe")
 }
-#+Enter::Run CMD /C START CMD
+#+Enter::Run CMD /C START CMD, %CmdFolder%
 ^#!Enter::PlainCmd()
 #IfWinActive ahk_class ConsoleWindowClass ahk_exe cmd.exe
     ^Tab::PlainCmd()
 #IfWinActive
+
+#!Enter::
+    FileSelectFolder CmdFolder, CmdFolder, 3, CmdFolder = %CmdFolder%
+Return
 
 ; Windows Terminal
 #Enter::CycleOrLaunch("WindowsTerminal"
