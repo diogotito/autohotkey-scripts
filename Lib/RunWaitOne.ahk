@@ -17,3 +17,7 @@ RunWaitOne(command) {
     ; Read and return the command's output
     return exec.StdOut.ReadAll()
 }
+
+ES_LatestFile(command) {
+    return RTrim(RunWaitOne("es -n 1 -sort-date-created " command), " `t`r`n")
+}

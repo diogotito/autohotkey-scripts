@@ -3,6 +3,10 @@
 ; Requires RunWaitOne_PrepareHiddenWindow() to have been run once
 ;------------------------------------------------------------------------------
 
+; keeps the OfficeKey + letter hotkeys in place
+; https://superuser.com/questions/1455857/how-to-disable-office-key-keyboard-shortcut-opening-office-app
+; ^!+LWin::send {Blind}{vk07}
+
 ; Scan code 29 is the `~ key
 ^#!sc029::Run ms-settings:nightlight
 ^#!+sc029::Run %A_ScriptDir%\bin\toggle_darkmode.rbw

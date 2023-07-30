@@ -64,16 +64,16 @@ return
 ;------------------------------------------------------------------------------
 ; 4. Application shortcuts
 ;------------------------------------------------------------------------------
+^#!A::Run C:\Program Files\AutoHotkey\WindowSpy.ahk
 ^#!T::Run C:\Users\diogotito\AppData\Roaming\Telegram Desktop\Telegram.exe
 ^#!P::Run C:\Users\diogotito\AppData\Local\SumatraPDF\SumatraPDF.exe
-^#!L::Run C:\Program Files\texstudio\texstudio.exe
 ^#!M::Run C:\Users\diogotito\AppData\Local\Programs\caprine\Caprine.exe
 ^#!D::CycleOrLaunch("Discord"
     , ELECTRON("Discord")
     , "C:\Users\diogotito\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Discord Inc\Discord.lnk")
 ^#!E::CycleOrLaunch("Godot"
     , ["ahk_class Engine", "ahk_exe RPGVXAce.exe"]
-    , "C:\tools\Godot\Godot_v3.5.1-stable_win64.exe")
+    , "C:\tools\Godot\Godot_v4.0-stable_win64.exe")
 
 ;------------------------------------------------------------------------------
 ; 5. Hotkeys to cycle between window groups -- see Lib\CycleOrLaunch.ahk
@@ -116,13 +116,18 @@ LaunchDevDocs() {
     , ELECTRON("Obsidian")
     , """C:\Users\diogotito\AppData\Local\Obsidian\Obsidian.exe""")
 
+; Notion
+^#!N::CycleOrLaunch("Notion"
+    , ELECTRON("Notion")
+    , """C:\Users\diogotito\AppData\Local\Programs\Notion\Notion.exe""")
+
 ; Sublime text
 ^#!S::CycleOrLaunch("SublimeText"
     , " - Sublime Text ahk_class PX_WINDOW_CLASS ahk_exe sublime_text.exe"
     , "subl")
 
 ; Neovim
-^#!N::CycleOrLaunch("Neovim"
+^#!V::CycleOrLaunch("Neovim"
     , "Neovim ahk_exe nvim-qt.exe"
     , Func("LaunchNeovim"))
 
@@ -142,7 +147,7 @@ LaunchNeovim() {
     , "C:\Program Files\Mozilla Firefox\firefox.exe")
 
 ; Git GUI, gitk, Fork, SourceTree, WinMerge, you name it
-^#!A::CycleOrLaunch("GitGUIs"
+^#!G::CycleOrLaunch("GitGUIs"
     , [ "Git Gui ahk_class TkTopLevel ahk_exe wish.exe"
     , "gitk ahk_class TkTopLevel ahk_exe wish.exe"
     , "WinMerge ahk_class WinMergeWindowClassW"
@@ -152,7 +157,7 @@ LaunchNeovim() {
 ; 6. Misc hotkeys
 ;------------------------------------------------------------------------------
 
-#q::qrencode() ; Lib\qrencode.ahk
+#^#!Q::qrencode() ; Lib\qrencode.ahk
 
 ; Open Bitwarden and click "Unlock with Windows Hello"
 ^#!B::
@@ -161,18 +166,30 @@ LaunchNeovim() {
         WinWait % "Bitwarden " ELECTRON("Bitwarden")
         WinGetPos X, Y, Width, Height
         btn_x := X + Width / 2 + 65
-        btn_y := Y + Height / 2 + 145
+        btn_y := Y + Height / 2 + 150
         DllCall("SetCursorPos", "int", btn_x, "int", btn_y)
         MouseClick
     }
 
-#IfWinActive Defold Editor
-F5::
-    SendInput, ^s^b
-    ToolTip, F5 >>> Ctrl + B`nBuild Project
-    Sleep 500
-    ToolTip,,
+#IfWinActive VLC media player ahk_exe vlc.exe
+^+S::
+    SendInput +S
+    Sleep 200
+    vlcsnap := RunWaitOne("es -sort-date-created -n 1 dm:today vlcsnap-*.png")
+    if vlcsnap is not space
+    {
+        vlcsnap := RTrim(vlcsnap, " `t`r`n")
+        Run C:\Program Files\paint.net\paintdotnet.exe "%vlcsnap%"
+    }
 return
+
+#IfWinActive Defold Editor
+    F5::
+        SendInput, ^s^b
+        ToolTip, F5 >>> Ctrl + B`nBuild Project
+        Sleep 500
+        ToolTip,,
+    return
 
 ;------------------------------------------------------------------------------
 ; RPG Maker VX Ace
@@ -221,6 +238,12 @@ return
 ;------------------------------------------------------------------------------
 ; TeXstudio (MRU)
 ;------------------------------------------------------------------------------
+
+#IfWinActive
+^#!L::CycleOrLaunch("TeXstudio"
+    , "TeXstudio ahk_class Qt650QWindowIcon ahk_exe texstudio.exe"
+    , "C:\Program Files\texstudio\texstudio.exe")
+
 #IfWinActive TeXstudio
     ^Tab::SendInput ^o{Enter}
     ^+Tab::SendInput ^o{Enter}

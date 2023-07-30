@@ -14,6 +14,7 @@
 ;------------------------------------------------------------------------------
 
 ; More ergonomic window management
+#Q::SendInput !{F4}
 #+Q::SendInput !{F4}
 
 ; Get to the %PATH% quicker
