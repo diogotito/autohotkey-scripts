@@ -173,14 +173,20 @@ LaunchNeovim() {
 
 #IfWinActive VLC media player ahk_exe vlc.exe
 ^+S::
+    Util_LogToolTip("> Taking VLC Snapshot (Ctrl+S)`n")
     SendInput +S
     Sleep 200
-    vlcsnap := RunWaitOne("es -sort-date-created -n 1 dm:today vlcsnap-*.png")
+
+    Util_LogToolTip("> Locating PNG...")
+    vlcsnap := ES_LatestFile("vlcsnap-*.png")
     if vlcsnap is not space
     {
-        vlcsnap := RTrim(vlcsnap, " `t`r`n")
+        Util_LogToolTip(" " vlcsnap "`n")
+        Util_LogToolTip("Launching Paint.NET...")
         Run C:\Program Files\paint.net\paintdotnet.exe "%vlcsnap%"
+        WinWait "paint.net",, 1
     }
+    Util_LogToolTip()
 return
 
 #IfWinActive Defold Editor
