@@ -141,6 +141,11 @@ LaunchNeovim() {
     , "Clock ahk_class ApplicationFrameWindow"]
     , Func("RunWaitOne").Bind("""code"" --reuse-window"))
 
+; IDE
+^#!W::CycleOrLaunch("IDE"
+    , "ahk_class SunAwtFrame ahk_exe rustrover64.exe"
+    , "C:\tools\jetbrains\rustrover.cmd")
+
 ; Firefox, Chrome, Edge, etc.
 ^#!F::CycleOrLaunch("BrowserWindows"
     , "Mozilla Firefox ahk_class MozillaWindowClass"
@@ -189,6 +194,9 @@ LaunchNeovim() {
     Util_LogToolTip()
 return
 
+#IfWinActive Windows PowerShell ISE ahk_exe powershell_ise.exe
+    ^E::Send {F5}
+
 #IfWinActive Defold Editor
     F5::
         SendInput, ^s^b
@@ -196,6 +204,16 @@ return
         Sleep 500
         ToolTip,,
     return
+
+;------------------------------------------------------------------------------
+; Fix Rust Rover's Alt+C in Run/Debug Configurations dialog
+;------------------------------------------------------------------------------
+#IfWinActive ahk_exe rustrover64.exe
+    !H::SendInput ^!+F
+    !+H::SendInput +{Esc}
+
+#IfWinActive Run/Debug Configurations ahk_class SunAwtDialog ahk_exe rustrover64.exe
+    !C::Send !h+{Tab}+{Enter}jk
 
 ;------------------------------------------------------------------------------
 ; RPG Maker VX Ace
