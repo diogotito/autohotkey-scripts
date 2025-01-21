@@ -67,13 +67,36 @@ return
 ^#!A::Run C:\Program Files\AutoHotkey\WindowSpy.ahk
 ^#!T::Run C:\Users\diogotito\AppData\Roaming\Telegram Desktop\Telegram.exe
 ^#!P::Run C:\Users\diogotito\AppData\Local\SumatraPDF\SumatraPDF.exe
-^#!M::Run C:\Users\diogotito\AppData\Local\Programs\caprine\Caprine.exe
+^#!+T::Run shell:AppsFolder\Microsoft.Todos_8wekyb3d8bbwe!App
+^#!+M::SetTimer, OpenInMpv, -1 ; 1 ms timeout (-) to run in another "thread"
+    OpenInMpv() {
+        Util_LogToolTip("> mpv " Clipboard "`n")
+        shell := ComObjCreate("WScript.Shell")
+        exec := shell.Exec("C:\Users\diogotito\scoop\apps\mpv\current\mpv.exe """ Clipboard """")
+        while exec.Status = 0 and not WinExist("ahk_pid " exec.ProcessID) {
+            Sleep 100
+            Util_LogToolTip(":")
+        }
+        if exec.ExitCode <> 0 {
+            Util_LogToolTip()
+            MsgBox 16, %A_ThisHotkey%:: mpv "%Clipboard%", % exec.StdOut.ReadAll() "-----`n" exec.StdErr.ReadAll()
+            return
+        }
+        Util_LogToolTip()
+        WinActivate % "ahk_pid " exec.ProcessID
+        return
+    }
+^#!M::CycleOrLaunch("mpv"
+    , ["ahk_class mpv"]
+    , "C:\Users\diogotito\scoop\apps\mpv\current\mpv.exe")
 ^#!D::CycleOrLaunch("Discord"
     , ELECTRON("Discord")
     , "C:\Users\diogotito\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Discord Inc\Discord.lnk")
-^#!E::CycleOrLaunch("Godot"
-    , ["ahk_class Engine", "ahk_exe RPGVXAce.exe"]
-    , "C:\tools\Godot\Godot_v4.0-stable_win64.exe")
+^#!E::CycleOrLaunch("Engines_and_IDEs"
+    , ["ahk_class Engine"
+    , "ahk_class SunAwtFrame ahk_exe rustrover64.exe"
+    , "ahk_exe RPGVXAce.exe" ]
+    , "C:\tools\jetbrains\rustrover.cmd")
 
 ;------------------------------------------------------------------------------
 ; 5. Hotkeys to cycle between window groups -- see Lib\CycleOrLaunch.ahk
@@ -116,10 +139,10 @@ LaunchDevDocs() {
     , ELECTRON("Obsidian")
     , """C:\Users\diogotito\AppData\Local\Obsidian\Obsidian.exe""")
 
-; Notion
+; Notion & Trello
 ^#!N::CycleOrLaunch("Notion"
-    , ELECTRON("Notion")
-    , """C:\Users\diogotito\AppData\Local\Programs\Notion\Notion.exe""")
+    , [ "|" ELECTRON("Notion"), "|" ELECTRON("Trello") ]
+    , LOCALAPPDATA """Programs\Notion\Notion.exe""")
 
 ; Sublime text
 ^#!S::CycleOrLaunch("SublimeText"
@@ -264,7 +287,7 @@ return
 ;------------------------------------------------------------------------------
 
 #IfWinActive
-^#!L::CycleOrLaunch("TeXstudio"
+^#!+L::CycleOrLaunch("TeXstudio"
     , "TeXstudio ahk_class Qt650QWindowIcon ahk_exe texstudio.exe"
     , "C:\Program Files\texstudio\texstudio.exe")
 

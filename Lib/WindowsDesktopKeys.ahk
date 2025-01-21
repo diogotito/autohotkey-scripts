@@ -41,6 +41,11 @@ Return
     , "ahk_class CASCADIA_HOSTING_WINDOW_CLASS ahk_exe WindowsTerminal.exe"
     , "wt.exe")
 
+#IfWinActive ahk_class CASCADIA_HOSTING_WINDOW_CLASS ahk_exe WindowsTerminal.exe
++CapsLock::CapsLock
+CapsLock::Ctrl
+#IfWinActive
+
 ;------------------------------------------------------------------------------
 ; 2. File Explorer enhancements
 ;------------------------------------------------------------------------------
@@ -136,7 +141,20 @@ Return
 #IfWinActive
 
 ;------------------------------------------------------------------------------
-; 4. Virtual desktops (courtesy of Ciantic/VirtualDesktopAccessor)
+; 4. Swap [Win] with [Win-Alt] hotkeys for FancyWM
+;------------------------------------------------------------------------------
+; $#h::Send #!h
+; $#j::Send #!lj
+; $#k::Send #!k
+; $#l::Send #!l
+
+; #$!h::Send #h
+; #$!j::Send #j
+; #$!k::Send #k
+; #$!l::Send #l
+
+;------------------------------------------------------------------------------
+; 5. Virtual desktops (courtesy of Ciantic/VirtualDesktopAccessor)
 ;------------------------------------------------------------------------------
 ; BTW https://github.com/Grabacr07/SylphyHorn goes well with this
 ; I use it to:

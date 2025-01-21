@@ -27,7 +27,7 @@ CycleOrLaunch(group_name:="", win_criteria:="", launch_command:="") {
 
     ; Try to activate the group now
     ; This will `GoSub when_no_match` if there isn't any window
-    ; (other than the currently active one!)
+    ; (other than the currently active one!) (see _COL_SetupGroup)
     ; that matches the group and a launch_command was provided
     DetectHiddenWindows, On
     GroupActivate, %group_name%, R
