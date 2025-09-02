@@ -68,11 +68,13 @@ return
 ^#!T::Run C:\Users\diogotito\AppData\Roaming\Telegram Desktop\Telegram.exe
 ^#!P::Run C:\Users\diogotito\AppData\Local\SumatraPDF\SumatraPDF.exe
 ^#!+T::Run shell:AppsFolder\Microsoft.Todos_8wekyb3d8bbwe!App
-^#!+M::SetTimer, OpenInMpv, -1 ; 1 ms timeout (-) to run in another "thread"
+^#!Y::SetTimer, OpenInMpv, -1 ; 1 ms timeout (-) to run in another "thread"
     OpenInMpv() {
+        mpv := "C:\tools\bin\mpv.exe --force-window=immediate"
+
         Util_LogToolTip("> mpv " Clipboard "`n")
         shell := ComObjCreate("WScript.Shell")
-        exec := shell.Exec("C:\Users\diogotito\scoop\apps\mpv\current\mpv.exe """ Clipboard """")
+        exec := shell.Exec(mpv " """ Clipboard """")
         while exec.Status = 0 and not WinExist("ahk_pid " exec.ProcessID) {
             Sleep 100
             Util_LogToolTip(":")
@@ -88,14 +90,17 @@ return
     }
 ^#!M::CycleOrLaunch("mpv"
     , ["ahk_class mpv"]
-    , "C:\Users\diogotito\scoop\apps\mpv\current\mpv.exe")
+    , "mpv")
 ^#!D::CycleOrLaunch("Discord"
     , ELECTRON("Discord")
-    , "C:\Users\diogotito\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Discord Inc\Discord.lnk")
+    , StartMenu("Discord Inc\Discord"))
 ^#!E::CycleOrLaunch("Engines_and_IDEs"
     , ["ahk_class Engine"
     , "ahk_class SunAwtFrame ahk_exe rustrover64.exe"
-    , "ahk_exe RPGVXAce.exe" ]
+    , "ahk_exe RPGVXAce.exe"
+    , "Emulicious"
+    , "ahk_class Aseprite"
+    , "ahk_exe SHADERed.exe" ]
     , "C:\tools\jetbrains\rustrover.cmd")
 
 ;------------------------------------------------------------------------------
@@ -142,7 +147,7 @@ LaunchDevDocs() {
 ; Notion & Trello
 ^#!N::CycleOrLaunch("Notion"
     , [ "|" ELECTRON("Notion"), "|" ELECTRON("Trello") ]
-    , LOCALAPPDATA """Programs\Notion\Notion.exe""")
+    , StartMenu("Notion"))
 
 ; Sublime text
 ^#!S::CycleOrLaunch("SublimeText"
@@ -193,8 +198,8 @@ LaunchNeovim() {
         Run "C:\Program Files\Bitwarden\Bitwarden.exe"
         WinWait % "Bitwarden " ELECTRON("Bitwarden")
         WinGetPos X, Y, Width, Height
-        btn_x := X + Width / 2 + 65
-        btn_y := Y + Height / 2 + 150
+        btn_x := X + Width / 2
+        btn_y := 620
         DllCall("SetCursorPos", "int", btn_x, "int", btn_y)
         MouseClick
     }

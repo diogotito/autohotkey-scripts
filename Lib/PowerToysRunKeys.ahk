@@ -15,8 +15,7 @@
 ; Launch PowerToys Run with a list of this desktop's windows, Switcheroo-style
 ;------------------------------------------------------------------------------
 #IfWinActive
-#w::
-#+w::
+#!+w::
 	switcheroo() {
 		SendInput !{Space}^a{BackSpace}<{Space}
 
@@ -46,3 +45,8 @@
 
 	; VS Code Workspaces plugin
 	^#C::SendInput !{Space}{{}
+
+	; Search packages  TODO make the keys work
+	^#P::
+		SendInput !{Space}> pwsh -c "pkg "{Left 1}
+		return

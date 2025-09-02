@@ -32,3 +32,7 @@ Util_LogToolTip(newText := "") {
 ELECTRON(exe := "") {
     return "ahk_class Chrome_WidgetWin_1" . (exe ? " ahk_exe " exe ".exe" : "")
 }
+
+StartMenu(shortcutName) {
+    return A_AppData "\Microsoft\Windows\Start Menu\Programs\" shortcutName ".lnk"
+}

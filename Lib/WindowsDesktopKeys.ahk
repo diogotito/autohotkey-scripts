@@ -38,7 +38,8 @@ Return
 
 ; Windows Terminal
 #Enter::CycleOrLaunch("WindowsTerminal"
-    , "ahk_class CASCADIA_HOSTING_WINDOW_CLASS ahk_exe WindowsTerminal.exe"
+    , ["ahk_class CASCADIA_HOSTING_WINDOW_CLASS ahk_exe WindowsTerminal.exe"
+      ,"ahk_class org.wezfurlong.wezterm"]
     , "wt.exe")
 
 #IfWinActive ahk_class CASCADIA_HOSTING_WINDOW_CLASS ahk_exe WindowsTerminal.exe
